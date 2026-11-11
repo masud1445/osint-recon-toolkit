@@ -1,0 +1,163 @@
+"""RDAP replaces legacy port-43 WHOIS; all operations retrieve existing records."""
+
+from .models import Evidence
+from .transport import SourceError
+
+
+class Connector:
+    name = ""
+
+    def __init__(self, transport, key=None):
+        self.transport, self.key = transport, key
+
+    def collect(self, target):
+        endpoint = self.endpoint(target)
+        result = Evidence(self.name, "unavailable", target.value, endpoint)
+        if self.name != "RDAP" and not self.key:
+            result.message = "API key not configured; no intelligence collected."
+            return result
+        try:
+            result.observations = self.normalize(self.fetch(target, endpoint))
+            identity = (
+                result.observations.get("ip_str")
+                or result.observations.get("domain")
+                or result.observations.get("ldhName")
+            )
+            if identity is not None and (
+                not isinstance(identity, str) or identity.lower() != target.value
+            ):
+                raise ValueError("Source target mismatch")
+            result.status = "observed"
+            result.message = "Source record retrieved. Observations are not independently verified findings."
+        except SourceError as exc:
+            result.status, result.message = exc.status, exc.message
+        except (KeyError, TypeError, ValueError, AttributeError):
+            result.status = "error"
+            result.message = "Unexpected source response schema or target mismatch."
+            result.observations = {}
+        return result
+
+
+class RDAP(Connector):
+    name = "RDAP"
+
+    def endpoint(self, target):
+        return f"https://rdap.org/{'domain' if target.kind == 'domain' else 'ip'}/{target.value}"
+
+    def fetch(self, target, endpoint):
+        return self.transport.get(endpoint, headers={"Accept": "application/rdap+json"})
+
+    def normalize(self, data):
+        if data.get("objectClassName") not in ("domain", "ip network"):
+            raise ValueError("Invalid RDAP object class")
+        # Contact entities, free-text remarks and arbitrary links are intentionally omitted.
+        return {
+            k: data[k]
+            for k in (
+                "objectClassName",
+                "handle",
+                "ldhName",
+                "name",
+                "startAddress",
+                "endAddress",
+                "ipVersion",
+                "country",
+                "status",
+                "events",
+            )
+            if k in data
+        }
+
+
+class Shodan(Connector):
+    name = "Shodan"
+
+    def endpoint(self, target):
+        return f"https://api.shodan.io/{'shodan/host' if target.kind == 'ip' else 'dns/domain'}/{target.value}"
+
+    def fetch(self, target, endpoint):
+        return self.transport.get(
+            endpoint,
+            params={
+                "key": self.key,
+                **({"minify": "true"} if target.kind == "ip" else {"page": 1}),
+            },
+            interval=1,
+        )
+
+    def normalize(self, data):
+        if not any(k in data for k in ("ip_str", "domain")):
+            raise ValueError("Missing Shodan target")
+        if "ports" in data and (
+            not isinstance(data["ports"], list)
+            or any(
+                type(port) is not int or not 1 <= port <= 65535
+                for port in data["ports"]
+            )
+        ):
+            raise ValueError("Invalid indexed ports")
+        # No banners or credentials; first-page domain records only.
+        selected = {
+            k: data[k]
+            for k in (
+                "ip_str",
+                "domain",
+                "ports",
+                "hostnames",
+                "org",
+                "isp",
+                "country_name",
+                "last_update",
+                "tags",
+                "more",
+            )
+            if k in data
+        }
+        if "domain" in data and "data" in data:
+            if not isinstance(data["data"], list) or any(
+                not isinstance(record, dict) for record in data["data"]
+            ):
+                raise ValueError("Invalid DNS records")
+            selected["dns_records"] = [
+                {
+                    k: record[k]
+                    for k in ("subdomain", "type", "value", "last_seen")
+                    if k in record
+                }
+                for record in data["data"]
+                if isinstance(record, dict)
+            ]
+        return selected
+
+
+class VirusTotal(Connector):
+    name = "VirusTotal"
+
+    def endpoint(self, target):
+        return f"https://www.virustotal.com/api/v3/{'ip_addresses' if target.kind == 'ip' else 'domains'}/{target.value}"
+
+    def fetch(self, target, endpoint):
+        return self.transport.get(endpoint, headers={"x-apikey": self.key}, interval=15)
+
+    def normalize(self, data):
+        attributes = data["data"]["attributes"]
+        if not isinstance(attributes, dict):
+            raise TypeError("Invalid VT attributes")
+        stats = attributes.get("last_analysis_stats", {})
+        if not isinstance(stats, dict) or any(
+            type(count) is not int or count < 0 for count in stats.values()
+        ):
+            raise ValueError("Invalid vendor counts")
+        return {
+            k: attributes[k]
+            for k in (
+                "last_analysis_stats",
+                "last_analysis_date",
+                "reputation",
+                "country",
+                "as_owner",
+                "asn",
+                "last_modification_date",
+            )
+            if k in attributes
+        }
