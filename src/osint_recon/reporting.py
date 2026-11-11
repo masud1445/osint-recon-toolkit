@@ -34,6 +34,8 @@ def redact(value, secrets):
 
 
 def export_report(report, directory, secrets=()):
+    # Longest-first replacement prevents a shorter key exposing a longer key's prefix.
+    secrets = sorted({secret for secret in secrets if secret}, key=len, reverse=True)
     report = redact(report, secrets)
     directory = Path(directory)
     directory.mkdir(parents=True, exist_ok=True)

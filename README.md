@@ -57,6 +57,7 @@ No synthetic intelligence is shipped or represented as live evidence. All test f
 - [Authorized OSINT workflow](docs/WORKFLOW.md)
 - [Operator manual and troubleshooting](docs/OPERATOR_MANUAL.md)
 - [Security policy](SECURITY.md)
-- [Validation evidence](docs/VALIDATION.md)
+- [Initial validation evidence](docs/VALIDATION.md)
+- [Post-push verification, security fixes and main-branch proposal](docs/POST_PUSH_REVIEW.md)
 
 CI runs Python 3.10, 3.12 and 3.13 on Linux, macOS and Windows. Local validation applies only to the platform actually tested. Dependency constraints permit compatible security updates; there is no reproducibility lock. For an assessed deployment, record `python -m pip freeze` in a private environment inventory after auditing installed versions. Do not include credentials or private package URLs in that inventory.

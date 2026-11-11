@@ -1,6 +1,9 @@
 """RDAP replaces legacy port-43 WHOIS; all operations retrieve existing records."""
 
+import ipaddress
+
 from .models import Evidence
+from .targets import validate_target
 from .transport import SourceError
 
 
@@ -11,22 +14,19 @@ class Connector:
         self.transport, self.key = transport, key
 
     def collect(self, target):
+        canonical = validate_target(target.value)
+        if canonical.kind != target.kind:
+            raise ValueError("Target kind does not match its value.")
+        target = canonical
         endpoint = self.endpoint(target)
         result = Evidence(self.name, "unavailable", target.value, endpoint)
         if self.name != "RDAP" and not self.key:
             result.message = "API key not configured; no intelligence collected."
             return result
         try:
-            result.observations = self.normalize(self.fetch(target, endpoint))
-            identity = (
-                result.observations.get("ip_str")
-                or result.observations.get("domain")
-                or result.observations.get("ldhName")
-            )
-            if identity is not None and (
-                not isinstance(identity, str) or identity.lower() != target.value
-            ):
-                raise ValueError("Source target mismatch")
+            data = self.fetch(target, endpoint)
+            self.validate_record(target, data)
+            result.observations = self.normalize(data)
             result.status = "observed"
             result.message = "Source record retrieved. Observations are not independently verified findings."
         except SourceError as exc:
@@ -37,6 +37,10 @@ class Connector:
             result.observations = {}
         return result
 
+    def validate_record(self, target, data):
+        """Each source must bind the returned record to the requested target."""
+        raise NotImplementedError
+
 
 class RDAP(Connector):
     name = "RDAP"
@@ -46,6 +50,22 @@ class RDAP(Connector):
 
     def fetch(self, target, endpoint):
         return self.transport.get(endpoint, headers={"Accept": "application/rdap+json"})
+
+    def validate_record(self, target, data):
+        if target.kind == "domain":
+            if (
+                data.get("objectClassName") != "domain"
+                or validate_target(data.get("ldhName")).value != target.value
+            ):
+                raise ValueError("RDAP domain mismatch")
+        else:
+            if data.get("objectClassName") != "ip network":
+                raise ValueError("RDAP object class mismatch")
+            start = ipaddress.ip_address(data["startAddress"])
+            end = ipaddress.ip_address(data["endAddress"])
+            address = ipaddress.ip_address(target.value)
+            if not start <= address <= end:
+                raise ValueError("RDAP network does not contain target")
 
     def normalize(self, data):
         if data.get("objectClassName") not in ("domain", "ip network"):
@@ -84,6 +104,11 @@ class Shodan(Connector):
             },
             interval=1,
         )
+
+    def validate_record(self, target, data):
+        identity = data.get("ip_str" if target.kind == "ip" else "domain")
+        if validate_target(identity) != target:
+            raise ValueError("Shodan target mismatch")
 
     def normalize(self, data):
         if not any(k in data for k in ("ip_str", "domain")):
@@ -138,6 +163,15 @@ class VirusTotal(Connector):
 
     def fetch(self, target, endpoint):
         return self.transport.get(endpoint, headers={"x-apikey": self.key}, interval=15)
+
+    def validate_record(self, target, data):
+        record = data["data"]
+        expected_type = "ip_address" if target.kind == "ip" else "domain"
+        if (
+            record.get("type") != expected_type
+            or validate_target(record.get("id")) != target
+        ):
+            raise ValueError("VirusTotal target mismatch")
 
     def normalize(self, data):
         attributes = data["data"]["attributes"]
