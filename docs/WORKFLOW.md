@@ -1,5 +1,7 @@
 # Authorized OSINT assessment workflow
 
+For an internship presentation without owned/approved targets, use the separate [offline demo workflow](DEMO_GUIDE.md). The steps below apply to live collection only.
+
 1. Record written authorization, target owner, exact domain/IP, permitted sources, purpose, dates, retention and responsible analyst outside the tool. Confirm applicable API contracts and institutional policies.
 2. Prepare a dedicated Python environment and API keys through approved secret management. Check subscriptions and VirusTotal noncommercial or commercial entitlement.
 3. Run one target with `--authorized` and only approved sources. The default source is RDAP. Do not expand scope from discovered hostnames or source records without separate approval.
@@ -9,4 +11,4 @@
 7. Document analyst conclusions, evidence limitations, source attribution and recommended actions. The generated report provides conservative guidance but does not replace analyst sign-off.
 8. Store artifacts under access control and retain/delete according to the approved engagement policy. Rotate keys immediately if exposure is suspected.
 
-The tool never initiates scans, submits VirusTotal analyses, or attempts authentication to the target. Test fixtures are synthetic and must never be cited as live target evidence.
+The tool never initiates scans, submits VirusTotal analyses, or attempts authentication to the target. Offline demo and test fixtures are synthetic and must never be cited as live target evidence.

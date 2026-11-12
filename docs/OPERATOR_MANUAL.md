@@ -1,6 +1,22 @@
 # Operator manual
 
-## Before collection
+## Offline demonstration without a domain or API keys
+
+After installation, run:
+
+```sh
+osint-recon --demo --output reports/supervisor-demo
+```
+
+Open `assessment.html` in that directory; `assessment.json` and `assessment.csv` contain the same synthetic evidence and findings. Demo exits 0 after successful export or 2 on invalid arguments/export failure. It never reads API credentials, constructs the HTTP transport, calls connectors, resolves DNS or contacts any target/provider. Existing API keys do not enable live activity in demo mode. Installing the application/dependencies may require network access; **running the installed demo does not**.
+
+The fixed fictional scope is `internship-lab.example` plus documentation IP `192.0.2.10`. Both are deliberately rejected by live target validation. Do not supply a target or combine demo with `--authorized`, `--sources` or `--vt-license`; mixed invocations fail before collection. Demo does not accept arbitrary user targets or source selection. Only `--demo` enters this path; missing API credentials and live failures never select it.
+
+The HTML banner, each finding/evidence card, JSON provenance fields and every CSV row identify synthetic training data. Demo uses JSON schema 1.1 with `mode: offline demonstration`, `is_synthetic: true`, `status: synthetic`, `data_classification` and `scenario_id`. `observed_sources` is always 0; `synthetic_sources` is 3. Each finding has its own synthetic flag and label. No real provider verdict, service exposure or compromise is implied.
+
+`generated_at` is the real report-preparation timestamp. Demo `collected_at`, RDAP events and source analysis/update dates are fixed **fictional fixture timestamps**, not a live collection or an age-based risk conclusion. See [the presentation guide](DEMO_GUIDE.md) for the complete workflow.
+
+## Before live collection
 
 Use Python 3.10 or later and follow the README virtual environment instructions. Obtain written target/source authorization before setting `--authorized`. Inspect `osint-recon --help`. Input accepts one public IPv4/IPv6 address or DNS domain (Unicode labels canonicalize through IDNA). URLs, paths, ports, IP ranges, wildcards, local/private IPs and reserved suffixes are rejected. A syntactically valid domain is not proof of registration or scope approval.
 
@@ -19,10 +35,10 @@ Generated files:
 | File | Use |
 | --- | --- |
 | `assessment.html` | Self-contained human review, source status, conservative interpretation and recommendations |
-| `assessment.json` | Structured assessment/evidence contract version 1.0 |
-| `assessment.csv` | One row per selected source, observations serialized as JSON |
+| `assessment.json` | Structured assessment/evidence: live schema 1.0, offline demo schema 1.1 |
+| `assessment.csv` | One row per source; observations and source-linked findings serialized as JSON, with explicit mode/classification and record target |
 
-Reports are labeled `live-source retrieval` to describe the execution path; check the observed source count to determine whether any live records were actually obtained. Zero successful sources means zero evidence-supported findings. Fixtures in automated tests are synthetic and never distributed as operational reports.
+Live reports are labeled `live-source retrieval` to describe the execution path; check the observed source count to determine whether any live records were actually obtained. Zero successful sources means zero evidence-supported findings. Offline demo reports instead use `offline demonstration` and explicit synthetic labels; they must never be presented as operational evidence.
 
 ## Troubleshooting
 

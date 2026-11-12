@@ -5,6 +5,7 @@ import os
 
 from .assessment import assess
 from .connectors import RDAP, Shodan, VirusTotal
+from .demo import build_demo_report
 from .reporting import export_report
 from .targets import validate_target
 from .transport import Transport
@@ -14,7 +15,14 @@ def main(argv=None):
     parser = argparse.ArgumentParser(
         description="Passive intelligence for a single authorized domain or public IP."
     )
-    parser.add_argument("target")
+    parser.add_argument(
+        "target", nargs="?", help="Approved live target; omit for --demo"
+    )
+    parser.add_argument(
+        "--demo",
+        action="store_true",
+        help="Generate an entirely synthetic offline training assessment; no target or keys needed",
+    )
     parser.add_argument(
         "--authorized",
         action="store_true",
@@ -24,7 +32,7 @@ def main(argv=None):
         "--sources",
         nargs="+",
         choices=["rdap", "shodan", "virustotal"],
-        default=["rdap"],
+        default=None,
     )
     parser.add_argument(
         "--vt-license",
@@ -37,6 +45,30 @@ def main(argv=None):
         help="Directory for new assessment.html/json/csv files",
     )
     args = parser.parse_args(argv)
+    if args.demo:
+        if (
+            args.target is not None
+            or args.authorized
+            or args.sources is not None
+            or args.vt_license is not None
+        ):
+            parser.error(
+                "--demo cannot be combined with a target, --authorized, --sources or --vt-license"
+            )
+        try:
+            export_report(build_demo_report(), args.output)
+        except OSError:
+            parser.exit(
+                2,
+                "Report export failed: check output permissions and use a new output directory.\n",
+            )
+        print(
+            "SYNTHETIC TRAINING DATA: exported offline HTML, JSON and CSV. No network requests or live assessment performed."
+        )
+        return 0
+    if args.target is None:
+        parser.error("provide an approved target for live collection, or use --demo")
+    args.sources = args.sources or ["rdap"]
     if not args.authorized:
         parser.error(
             "--authorized is required; obtain target approval before collection"

@@ -2,7 +2,10 @@
 
 ```mermaid
 flowchart LR
-    A[CLI authorization and licensing] --> B[Target validation]
+    A[CLI mode selection] --> B[Live authorization, licensing and target validation]
+    A --> I[Explicit offline demo]
+    I --> J[Local fictional fixtures]
+    J --> H
     B --> C[Source connectors]
     C --> D[Bounded read-only HTTPS transport]
     D --> E[Approved source APIs]
@@ -18,6 +21,7 @@ flowchart LR
 | `targets` | Canonical public IP or IDNA domain; reject URL syntax, control/whitespace, reserved suffixes and private addresses |
 | `transport` | Fixed HTTPS destinations, GET only, verified TLS, streamed 2 MB response cap, explicit 32-level JSON nesting bound, bounded retries and source pacing |
 | `connectors` | Provider-specific endpoints/authentication and selected normalized fields |
+| `demo` | Fixed fictional scenario and synthetic evidence/findings; no transport, connector or live assessment imports |
 | `models` | UTC retrieval timestamps, provenance, explicit availability state |
 | `assessment` | Evidence-backed informational/review findings without unsupported risk scoring |
 | `reporting` | Self-contained escaped HTML, JSON, formula-safe CSV; secret redaction and exclusive output creation |
@@ -65,3 +69,12 @@ Connect/read timeouts: 5/20 seconds. Three attempts by default, bounded to 1–5
 No target DNS lookups or target HTTP/socket requests occur. Authorization flags record operator acknowledgement; they cannot prove external legal approval. Source endpoints are fixed and target validation blocks path/query injection. Connectors repeat validation for library callers, reject scoped IPv6, and require matching source identities; RDAP network ranges must contain the target. Requests retain normal TLS verification and inherited proxy trust. No request/response logging is installed; sanitized provider errors exclude raw bodies and exception text. Provider JSON rejects non-finite numbers and invalid Unicode. Reports remove configured key strings recursively, longest key first, escape HTML, disable external content through CSP and neutralize spreadsheet formulas. Keys are never stored in an evidence object. Avoid enabling third-party HTTP debug logging because Shodan requires a query-string key.
 
 Reports preserve only selected provider fields, not full raw responses, and are not signed chain-of-custody archives. Fixed output files are created exclusively to avoid symlink following and overwriting existing files. Operators must trust and protect the parent output directory. Reports have restrictive creation modes where supported; Windows ACLs require separate administration. Environment variables remain accessible to the process owner and are not a substitute for a production secret manager.
+
+
+## Offline demonstration boundary
+
+`--demo` selects `demo.build_demo_report` before any API-key lookup or Transport construction. Its fixed reserved `.example` domain and RFC 5737 documentation IP cannot pass live target validation. The demo module imports only the UTC timestamp helper, creates fresh fixture dictionaries on each call and never invokes the live assessment engine or connectors. It does not resolve identifiers, query providers, submit analyses or require API licensing because no provider is used. Mixed target/source/authorization/license flags are rejected.
+
+Demo JSON schema 1.1 carries explicit top-level and per-record/per-finding `is_synthetic` and `data_classification` metadata. Source status is `synthetic`, not `observed`; actual observed sources remain 0. Fixed source/fixture dates are clearly separate from real report `generated_at`. The HTML uses a training banner, repeated finding/source labels, fictional scope and synthetic timestamp descriptions. No live authorization claim is rendered for a demonstration.
+
+Exports share the escaped renderer, formula-safe CSV writer and exclusive file creation. The exporter refuses synthetic evidence under a live mode or non-synthetic records/findings in a demo. Live JSON schema 1.0 and existing source states remain unchanged. CSV retains its original columns and adds `mode`, `data_classification`, `findings` (JSON array), `record_target` and `timestamp_kind`; the source-linked findings carry their own provenance. Consumers should parse columns by name. No automatic fallback from a failed live call to the demo exists.

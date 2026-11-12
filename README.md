@@ -25,7 +25,19 @@ python -m pytest --cov=osint_recon --cov-report=term-missing
 
 The cloud checkout uses `/workspace/osint-venv`; activate it with `. /workspace/osint-venv/bin/activate`. No database, web server or background services are required.
 
-## Operate
+## Offline internship demonstration
+
+No domain ownership, API keys, target authorization or network access is needed for this **fictional local demonstration** once the application and dependencies are installed:
+
+```sh
+osint-recon --demo --output reports/supervisor-demo
+```
+
+Open `reports/supervisor-demo/assessment.html` locally. JSON and CSV are generated alongside it. Every record and training finding is labelled **SYNTHETIC TRAINING DATA — NOT LIVE INTELLIGENCE**. The fixed scenario uses `internship-lab.example` and documentation-only IP `192.0.2.10`; neither is submitted to an API. No source is contacted and no API credentials are read. Demo rejects live targets, `--authorized`, `--sources` and `--vt-license`, and live failures never fall back to fixtures. Use a new output directory for each run.
+
+See the [supervisor presentation walkthrough](docs/DEMO_GUIDE.md). The domain/IP validator remains strict for live collection; reserved demo identifiers cannot be used as live targets.
+
+## Operate with authorized live targets
 
 First obtain written approval for the exact target and approved sources. Replace `APPROVED_DOMAIN` below with that target; placeholders are not intelligence or authorization.
 
@@ -48,7 +60,7 @@ Outputs use fixed names `assessment.html`, `assessment.json`, `assessment.csv`. 
 
 Shodan domain results include selected DNS records from the first page; `more` preserves the pagination indicator. This version intentionally does not enumerate every record. Raw banners, contact entities, per-vendor detail and arbitrary source links are omitted for data minimization. RDAP redirects are restricted to the explicitly reviewed registry hosts listed in the transport module; other registries yield unavailable status. Legacy port-43 WHOIS is not implemented. See [architecture](docs/ARCHITECTURE.md) and [operator manual](docs/OPERATOR_MANUAL.md).
 
-No synthetic intelligence is shipped or represented as live evidence. All test fixtures are synthetic and confined to tests. No live source integrations have been verified for this release; provider documentation access was denied by the development environment's egress policy. Review current API documentation and run an authorized acceptance check before operational reliance.
+Explicit offline demo fixtures are shipped in a separate module and are never represented as live evidence. Additional automated test fixtures are synthetic. No live source integrations have been verified for this release; provider documentation access was denied by the development environment's egress policy. Review current API documentation and run an authorized acceptance check before operational reliance.
 
 ## Development and assessment
 
