@@ -42,7 +42,7 @@ def test_complete_demo_offline_without_keys(tmp_path, monkeypatch, offline, caps
         "assessment.json",
         "assessment.csv",
     }
-    report = json.loads((tmp_path / "assessment.json").read_text())
+    report = json.loads((tmp_path / "assessment.json").read_text(encoding="utf-8"))
     assert report["mode"] == DEMO_MODE
     assert report["is_synthetic"] is True
     assert report["summary"]["observed_sources"] == 0
@@ -75,12 +75,12 @@ def test_demo_ignores_existing_keys(tmp_path, monkeypatch, offline):
     monkeypatch.setattr(os.environ, "get", guarded_get)
     assert main(["--demo", "--output", str(tmp_path)]) == 0
     for path in tmp_path.iterdir():
-        assert sentinel not in path.read_text()
+        assert sentinel not in path.read_text(encoding="utf-8")
 
 
 def test_html_and_csv_label_each_finding_and_record(tmp_path, offline):
     export_report(build_demo_report(), tmp_path)
-    html = (tmp_path / "assessment.html").read_text()
+    html = (tmp_path / "assessment.html").read_text(encoding="utf-8")
     assert "training-banner" in html
     assert html.count(DEMO_LABEL) >= 7
     assert "0 live observations" in html
@@ -146,11 +146,11 @@ def test_live_failure_never_falls_back_to_demo(tmp_path, monkeypatch):
         == 1
     )
     fallback.assert_not_called()
-    report = json.loads((tmp_path / "assessment.json").read_text())
+    report = json.loads((tmp_path / "assessment.json").read_text(encoding="utf-8"))
     assert report["mode"] == "live-source retrieval"
     assert report["findings"] == []
     assert report["evidence"][0]["status"] == "unavailable"
-    assert DEMO_LABEL not in (tmp_path / "assessment.html").read_text()
+    assert DEMO_LABEL not in (tmp_path / "assessment.html").read_text(encoding="utf-8")
 
 
 def test_fixture_independence_and_reserved_identifiers():
@@ -200,7 +200,7 @@ def test_demo_html_keeps_escaping(tmp_path):
     report["findings"][0]["title"] = "<script>alert('training')</script>"
     report["evidence"][1]["observations"]["org"] = "<img src=x onerror=alert(1)>"
     export_report(report, tmp_path)
-    html = (tmp_path / "assessment.html").read_text()
+    html = (tmp_path / "assessment.html").read_text(encoding="utf-8")
     assert "<script>" not in html
     assert "<img" not in html
     assert "&lt;script&gt;" in html
