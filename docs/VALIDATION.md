@@ -1,4 +1,6 @@
-# Validation record
+# Initial validation record — commit 4131bc4
+
+For the subsequent security review and current local results, see [Post-push review](POST_PUSH_REVIEW.md). The figures below preserve the initial push evidence.
 
 Local platform: Linux, Python 3.12.14. All provider responses in automated tests are synthetic. No authorized live API collection was performed. The application is operationally structured, but live API acceptance remains outstanding.
 

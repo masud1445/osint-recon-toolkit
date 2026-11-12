@@ -7,3 +7,5 @@ Never commit API keys, `.env` files, private engagement data or generated report
 Treat third-party evidence as untrusted and potentially stale. HTML is escaped and CSV formula triggers are neutralized, but exported evidence still requires analyst review. Store reports in a trusted directory with appropriate OS ACLs. Do not deploy the CLI as a shared commercial service without a separate security review and suitable provider licenses.
 
 Report suspected defects privately to the repository owner through an available private channel. Do not include live secrets or publish exploitable details before coordinated remediation. No dedicated security contact or response SLA has been configured.
+
+Explicit `--demo` mode is an offline, fictional training exception to live target authorization: it accepts no target or live options and never reads API keys or initiates network access. Keep its synthetic labels intact when presenting or distributing generated artifacts. Do not interpret demo fixtures or findings as provider observations.

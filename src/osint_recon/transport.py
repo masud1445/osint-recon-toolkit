@@ -10,6 +10,10 @@ from urllib.parse import urlsplit
 import requests
 
 
+def reject_nonfinite(value):
+    raise ValueError("Non-finite JSON number")
+
+
 class SourceError(Exception):
     def __init__(self, status, message):
         self.status, self.message = status, message
@@ -140,7 +144,7 @@ class Transport:
                                 "error", "Source response exceeds size limit."
                             )
                     try:
-                        data = json.loads(body)
+                        data = json.loads(body, parse_constant=reject_nonfinite)
                     except (ValueError, UnicodeError, RecursionError):
                         raise SourceError(
                             "error", "Source returned invalid JSON."
@@ -154,7 +158,19 @@ class Transport:
                             raise SourceError(
                                 "error", "Source JSON exceeds nesting limit."
                             )
+                        if isinstance(node, float) and not math.isfinite(node):
+                            raise SourceError(
+                                "error", "Source contains a non-finite number."
+                            )
+                        if isinstance(node, str):
+                            try:
+                                node.encode("utf-8")
+                            except UnicodeError:
+                                raise SourceError(
+                                    "error", "Source contains invalid Unicode."
+                                ) from None
                         if isinstance(node, dict):
+                            pending.extend((key, depth + 1) for key in node)
                             pending.extend(
                                 (value, depth + 1) for value in node.values()
                             )
