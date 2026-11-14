@@ -1,8 +1,11 @@
 # OSINT Recon Toolkit — Project 6.1
 
-A portable Python CLI for authorized, passive domain and public-IP intelligence. Built for cybersecurity training and evidence-led external attack-surface review. Independent of CyberAssess and Phishing Awareness Tracker.
+A local web dashboard and portable Python CLI for authorized, passive domain and public-IP intelligence. Built for cybersecurity training and evidence-led external attack-surface review. Independent of CyberAssess and Phishing Awareness Tracker.
 
 ## What it does
+
+- Provides a responsive navy/cyan dashboard with overview metrics, source-backed charts, assessment creation, progress, source evidence, findings, history, report export and light/dark themes.
+- Runs a single-user Flask application through Waitress on **127.0.0.1 only**, with local SQLite persistence and server-side API credentials.
 
 - Retrieves existing **RDAP registration records** (the structured successor to WHOIS), **Shodan host/domain metadata**, and **VirusTotal v3 domain/IP records**.
 - Validates targets without DNS resolution or target contact. Does not scan ports, request target webpages, submit samples, launch analyses, exploit systems, or collect credentials.
@@ -23,7 +26,37 @@ python -m pip install -e ".[test]"
 python -m pytest --cov=osint_recon --cov-report=term-missing
 ```
 
-The cloud checkout uses `/workspace/osint-venv`; activate it with `. /workspace/osint-venv/bin/activate`. No database, web server or background services are required.
+The cloud checkout uses `/workspace/osint-venv`; activate it with `. /workspace/osint-venv/bin/activate`. The CLI needs no running services. The dashboard starts its own local Waitress server and uses Python’s built-in SQLite; no external database service is required.
+
+## Start the dashboard on a Mac
+
+From a new Terminal window:
+
+```sh
+git clone https://github.com/masud1445/osint-recon-toolkit.git
+cd osint-recon-toolkit
+git switch feature/local-intelligence-dashboard
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e '.[test]'
+osint-dashboard
+```
+
+Keep that Terminal running. In another Terminal tab, open your local browser:
+
+```sh
+open http://127.0.0.1:8765
+```
+
+Choose **New assessment → Demo** for a completely fictional workflow without target ownership or keys. Choose **Live** only for an approved target, select sources, confirm authorization and record a scope-approval reference. Every new live run requires its own authorization acknowledgement. Live failures retain unavailable/error states and never turn into demo records.
+
+Default history is stored at `~/.osint-recon/assessments.sqlite3`. Optional startup settings:
+
+```sh
+osint-dashboard --port 8766 --data-dir "$HOME/.osint-recon-internship"
+```
+
+Ports must be 1024–65535. There is no public-host option or debug server. Run one dashboard process per data directory, on a trusted personal OS account; do not expose it through a tunnel, reverse proxy or LAN listener. Read [dashboard operation and security](docs/DASHBOARD.md) before live use.
 
 ## Offline internship demonstration
 
@@ -33,7 +66,7 @@ No domain ownership, API keys, target authorization or network access is needed 
 osint-recon --demo --output reports/supervisor-demo
 ```
 
-Open `reports/supervisor-demo/assessment.html` locally. JSON and CSV are generated alongside it. Every record and training finding is labelled **SYNTHETIC TRAINING DATA — NOT LIVE INTELLIGENCE**. The fixed scenario uses `internship-lab.example` and documentation-only IP `192.0.2.10`; neither is submitted to an API. No source is contacted and no API credentials are read. Demo rejects live targets, `--authorized`, `--sources` and `--vt-license`, and live failures never fall back to fixtures. Use a new output directory for each run.
+Open `reports/supervisor-demo/assessment.html` locally. JSON and CSV are generated alongside it. A concise Demo indicator and explicit structured provenance identify **SYNTHETIC TRAINING DATA — NOT LIVE INTELLIGENCE**; exported cards retain per-record classification. The fixed scenario uses `internship-lab.example` and documentation-only IP `192.0.2.10`; neither is submitted to an API. No source is contacted and no API credentials are read. Demo rejects live targets, `--authorized`, `--sources` and `--vt-license`, and live failures never fall back to fixtures. Use a new output directory for each run.
 
 See the [supervisor presentation walkthrough](docs/DEMO_GUIDE.md). The domain/IP validator remains strict for live collection; reserved demo identifiers cannot be used as live targets.
 
@@ -56,7 +89,7 @@ Outputs use fixed names `assessment.html`, `assessment.json`, `assessment.csv`. 
 
 ## Evidence and limits
 
-“Observed” confirms retrieval of a source record, not current reachability, ownership, a vulnerability, or compromise. The HTML report includes an executive summary, target, retrieval timestamps, source endpoint, selected evidence, conservative risk interpretation and recommendations. Provider timestamps are preserved separately where available; no overall risk score is fabricated.
+“Observed” confirms retrieval of a source record, not current reachability, ownership, a vulnerability, or compromise. The self-contained HTML report includes executive cards, source-availability and vendor-classification charts when supported by evidence, source tables, readable UTC timestamps, collapsible normalized JSON, findings, recommendations and white A4 print styling. Charts do not infer risk scores or invent missing data. Provider timestamps are preserved separately where available; no overall risk score is fabricated.
 
 Shodan domain results include selected DNS records from the first page; `more` preserves the pagination indicator. This version intentionally does not enumerate every record. Raw banners, contact entities, per-vendor detail and arbitrary source links are omitted for data minimization. RDAP redirects are restricted to the explicitly reviewed registry hosts listed in the transport module; other registries yield unavailable status. Legacy port-43 WHOIS is not implemented. See [architecture](docs/ARCHITECTURE.md) and [operator manual](docs/OPERATOR_MANUAL.md).
 
@@ -67,7 +100,9 @@ Explicit offline demo fixtures are shipped in a separate module and are never re
 - [Initial audit and implementation plan](docs/AUDIT_AND_PLAN.md)
 - [Architecture and API contracts](docs/ARCHITECTURE.md)
 - [Authorized OSINT workflow](docs/WORKFLOW.md)
+- [Dashboard guide and Mac startup](docs/DASHBOARD.md)
 - [Operator manual and troubleshooting](docs/OPERATOR_MANUAL.md)
+- [Dashboard validation evidence](docs/WEB_VALIDATION.md)
 - [Security policy](SECURITY.md)
 - [Initial validation evidence](docs/VALIDATION.md)
 - [Post-push verification, security fixes and main-branch proposal](docs/POST_PUSH_REVIEW.md)

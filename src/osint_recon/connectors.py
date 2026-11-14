@@ -2,7 +2,7 @@
 
 import ipaddress
 
-from .models import Evidence
+from .models import Evidence, now
 from .targets import validate_target
 from .transport import SourceError
 
@@ -25,6 +25,7 @@ class Connector:
             return result
         try:
             data = self.fetch(target, endpoint)
+            result.collected_at = now()
             self.validate_record(target, data)
             result.observations = self.normalize(data)
             result.status = "observed"
@@ -71,7 +72,7 @@ class RDAP(Connector):
         if data.get("objectClassName") not in ("domain", "ip network"):
             raise ValueError("Invalid RDAP object class")
         # Contact entities, free-text remarks and arbitrary links are intentionally omitted.
-        return {
+        selected = {
             k: data[k]
             for k in (
                 "objectClassName",
@@ -87,6 +88,17 @@ class RDAP(Connector):
             )
             if k in data
         }
+        if "nameservers" in data:
+            nameservers = data["nameservers"]
+            if not isinstance(nameservers, list) or any(
+                not isinstance(item, dict) for item in nameservers
+            ):
+                raise ValueError("Invalid RDAP nameservers")
+            selected["nameservers"] = [
+                {key: item[key] for key in ("ldhName", "unicodeName") if key in item}
+                for item in nameservers
+            ]
+        return selected
 
 
 class Shodan(Connector):
@@ -133,6 +145,8 @@ class Shodan(Connector):
                 "isp",
                 "country_name",
                 "last_update",
+                "asn",
+                "subdomains",
                 "tags",
                 "more",
             )

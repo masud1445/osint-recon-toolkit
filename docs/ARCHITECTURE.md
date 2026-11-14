@@ -2,8 +2,12 @@
 
 ```mermaid
 flowchart LR
-    A[CLI mode selection] --> B[Live authorization, licensing and target validation]
+    W[Local Flask dashboard / Waitress] --> Q[Single collection worker]
+    Q --> B[Live authorization, licensing and target validation]
+    W --> S[SQLite history and authorization records]
+    A[CLI mode selection] --> B
     A --> I[Explicit offline demo]
+    Q --> I
     I --> J[Local fictional fixtures]
     J --> H
     B --> C[Source connectors]
@@ -26,6 +30,8 @@ flowchart LR
 | `assessment` | Evidence-backed informational/review findings without unsupported risk scoring |
 | `reporting` | Self-contained escaped HTML, JSON, formula-safe CSV; secret redaction and exclusive output creation |
 | `cli` | Scope/licensing acknowledgement, environment keys, orchestration and exit semantics |
+| `web` | Loopback Flask routes, validation, CSRF/origin checks, single-worker collection and browser status polling |
+| `store` | Parameterized SQLite history, authorization metadata, interrupted-job recovery and explicit record deletion |
 
 ## Implemented API contracts
 
@@ -75,6 +81,21 @@ Reports preserve only selected provider fields, not full raw responses, and are 
 
 `--demo` selects `demo.build_demo_report` before any API-key lookup or Transport construction. Its fixed reserved `.example` domain and RFC 5737 documentation IP cannot pass live target validation. The demo module imports only the UTC timestamp helper, creates fresh fixture dictionaries on each call and never invokes the live assessment engine or connectors. It does not resolve identifiers, query providers, submit analyses or require API licensing because no provider is used. Mixed target/source/authorization/license flags are rejected.
 
-Demo JSON schema 1.1 carries explicit top-level and per-record/per-finding `is_synthetic` and `data_classification` metadata. Source status is `synthetic`, not `observed`; actual observed sources remain 0. Fixed source/fixture dates are clearly separate from real report `generated_at`. The HTML uses a training banner, repeated finding/source labels, fictional scope and synthetic timestamp descriptions. No live authorization claim is rendered for a demonstration.
+Demo JSON schema 1.1 carries explicit top-level and per-record/per-finding `is_synthetic` and `data_classification` metadata. Source status is `synthetic`, not `observed`; actual observed sources remain 0. Fixed source/fixture dates are clearly separate from real report `generated_at`. The HTML uses one concise training banner, compact per-card synthetic badges/classification attributes, fictional scope and synthetic timestamp descriptions. No live authorization claim is rendered for a demonstration.
 
 Exports share the escaped renderer, formula-safe CSV writer and exclusive file creation. The exporter refuses synthetic evidence under a live mode or non-synthetic records/findings in a demo. Live JSON schema 1.0 and existing source states remain unchanged. CSV retains its original columns and adds `mode`, `data_classification`, `findings` (JSON array), `record_target` and `timestamp_kind`; the source-linked findings carry their own provenance. Consumers should parse columns by name. No automatic fallback from a failed live call to the demo exists.
+
+
+## Local dashboard architecture
+
+`osint-dashboard` runs the Flask application through Waitress on fixed host `127.0.0.1` (default port 8765). Routes render packaged, escaped Jinja templates and local CSS/JavaScript; no CDN or external font is required. The dashboard calls existing `RDAP`, `Shodan`, `VirusTotal`, `assess`, `build_demo_report` and `export_report` functions rather than maintaining a second intelligence engine. A single background worker maintains one live Transport instance so its provider pacing continues across assessments in the same process. The pending queue is capped at five assessments. Separate processes/accounts are not coordinated; do not share one data directory between running dashboards or bypass provider account quotas with concurrent CLI runs.
+
+Each new live submission validates its target/sources, records a scope-reference and authorization acknowledgement with target, selected sources, license declaration and timestamp, then collects fresh source records. Report mode remains `live-source retrieval`, including when every source is unavailable. Demo submissions reject live inputs, use fixed fictional records and never instantiate transport or call providers. Mode is stored separately for history as `live` or `demo` and cannot be relabelled through a UI control.
+
+The SQLite store defaults to `~/.osint-recon/assessments.sqlite3`. New directories/files request POSIX modes 0700/0600; existing paths and Windows ACLs require operator review. Reports are redacted before persistence and display. Failed runs retain submitted authorization metadata; raw exception strings, API request credentials and raw provider bodies are not stored. Evidence JSON means normalized selected fields returned by a source, not the entire unfiltered API payload. Source registration entities and banners remain intentionally minimized.
+
+History lists the newest 100 records without automatic pruning. Parameterized queries and validated opaque IDs restrict lookup/deletion. Finished/error records can be removed through CSRF-protected POST; active ones cannot. On startup, queued/running records left by a stopped process are marked error and require an explicitly new assessment. Processes, jobs and signed-cookie sessions are not restored from persistent history.
+
+Browser responses use a restrictive same-origin CSP, no-store caching, no-referrer, nosniff and frame denial. POST actions require a signed-session CSRF token, acceptable Host/Origin and loopback client address; cross-site Fetch Metadata is rejected. API keys are never accepted through the browser and only binding presence is displayed. Session secrets rotate at startup; cookies are HttpOnly and SameSite Strict. Secure-cookie mode is not used on the intentional local HTTP endpoint. These are single-user loopback protections, not an authentication/authorization system for a publicly accessible or multi-user service.
+
+Standalone HTML exports remain self-contained: native disclosure panels, source-backed charts, normalized JSON, readable UTC timestamps and explicit A4 white print rules. JSON/CSV retain structured provenance. The dashboard offers per-assessment HTML/JSON/CSV downloads, but does not sign evidence or provide cryptographic chain of custody. See [dashboard operations](DASHBOARD.md) and [validation](WEB_VALIDATION.md).
