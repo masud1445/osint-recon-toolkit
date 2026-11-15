@@ -72,6 +72,7 @@ def test_headers_and_cookie_protect_local_data(client):
     assert "script-src 'self'" in policy
     assert response.headers["X-Content-Type-Options"] == "nosniff"
     assert response.headers["X-Frame-Options"] == "DENY"
+    assert response.headers["Referrer-Policy"] == "same-origin"
     assert "no-store" in response.headers["Cache-Control"]
     cookie = response.headers.get("Set-Cookie", "")
     assert "HttpOnly" in cookie

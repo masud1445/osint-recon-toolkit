@@ -30,17 +30,32 @@ The cloud checkout uses `/workspace/osint-venv`; activate it with `. /workspace/
 
 ## Start the dashboard on a Mac
 
-From a new Terminal window:
+Use the published [`fix/dashboard-validation`](https://github.com/masud1445/osint-recon-toolkit/tree/fix/dashboard-validation) branch for these corrections. The [`recovery/local-intelligence-dashboard`](https://github.com/masud1445/osint-recon-toolkit/tree/recovery/local-intelligence-dashboard) branch preserves the recovered implementation at `cefb039`; the repository's default branch can still point to the older CLI release. Switching explicitly is required.
+
+For a new clone, start a new Terminal window:
 
 ```sh
 git clone https://github.com/masud1445/osint-recon-toolkit.git
 cd osint-recon-toolkit
-git switch feature/local-intelligence-dashboard
+git switch fix/dashboard-validation
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[test]'
 osint-dashboard
 ```
+
+For an existing clone, use its current directory rather than cloning over it. First run `git status --short`; if it lists local changes, stop and preserve that work before switching. From a clean checkout:
+
+```sh
+git fetch origin
+git switch fix/dashboard-validation
+git pull --ff-only origin fix/dashboard-validation
+source .venv/bin/activate
+python -m pip install -e '.[test]'
+osint-dashboard
+```
+
+Create `.venv` with `python3 -m venv .venv` first if this checkout does not already have one. The fast-forward-only pull refuses divergent history rather than creating a merge or rewriting local work.
 
 Keep that Terminal running. In another Terminal tab, open your local browser:
 

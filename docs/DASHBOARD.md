@@ -4,12 +4,14 @@ The dashboard adds an interactive local interface around the existing passive co
 
 ## Exact Mac Terminal startup
 
-Use a new Terminal window:
+The corrected dashboard is on [`fix/dashboard-validation`](https://github.com/masud1445/osint-recon-toolkit/tree/fix/dashboard-validation). The separate [`recovery/local-intelligence-dashboard`](https://github.com/masud1445/osint-recon-toolkit/tree/recovery/local-intelligence-dashboard) branch retains the unchanged recovery checkpoint (`cefb039`). The default branch can still contain the older CLI release; do not rely on a default-branch checkout for this interface.
+
+For a new clone, use a new Terminal window:
 
 ```sh
 git clone https://github.com/masud1445/osint-recon-toolkit.git
 cd osint-recon-toolkit
-git switch feature/local-intelligence-dashboard
+git switch fix/dashboard-validation
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[test]'
@@ -22,7 +24,25 @@ Keep the server Terminal open. In another Terminal tab:
 open http://127.0.0.1:8765
 ```
 
-If the repository is already cloned, use its existing checkout, switch to the feature branch after preserving local work, activate its virtual environment and rerun installation. Do not clone over an existing directory. The Flask application runs through Waitress on `127.0.0.1`; Flask debug/reloader is not used. Control-C stops the server.
+For an existing clone, use that checkout and inspect it before switching:
+
+```sh
+cd /path/to/osint-recon-toolkit
+git status --short
+```
+
+If this reports local changes, stop and preserve them before continuing. From a clean checkout:
+
+```sh
+git fetch origin
+git switch fix/dashboard-validation
+git pull --ff-only origin fix/dashboard-validation
+source .venv/bin/activate
+python -m pip install -e '.[test]'
+osint-dashboard
+```
+
+If `.venv` does not exist, create it with `python3 -m venv .venv` before activation. A fast-forward-only pull refuses divergent history; it does not merge or reset it. Do not clone over an existing directory. The Flask application runs through Waitress on `127.0.0.1`; Flask debug/reloader is not used. Control-C stops the server.
 
 An alternative local port or data directory can be selected:
 
@@ -92,7 +112,7 @@ The history list is limited to the newest 100 records; this is a display limit, 
 
 One collection worker processes assessments sequentially with at most five queued/running records. Per-provider pacing is maintained by its shared Transport within that process. Account/day quotas and other CLI/dashboard processes are not coordinated. Closing the browser does not cancel a job. After a process shutdown, previously queued/running rows are marked error on startup rather than automatically resumed; create a new assessment when appropriate. Do not run two servers against one data directory.
 
-The session signing key changes at restart. Reload browser forms after restarting to get a fresh CSRF token. CSRF tokens, Host/Origin checks, loopback address checks and Fetch Metadata restrictions are security boundaries; do not disable them to work around access errors. The local HTTP cookie is HttpOnly and SameSite Strict, not Secure. No multi-user authentication is provided; use a trusted OS account and browser profile.
+The session signing key changes at restart. Reload browser forms after restarting to get a fresh CSRF token. Responses use `Referrer-Policy: same-origin`, which keeps referrer information within the local origin and preserves a usable same-origin `Origin` header on browser form submissions. The earlier `no-referrer` policy caused Chromium to submit `Origin: null`; strict origin validation correctly rejected those submissions. The policy correction retains rejection of null/foreign origins and the signed-session CSRF requirement. CSRF tokens, Host/Origin checks, loopback address checks and Fetch Metadata restrictions are security boundaries; do not disable them to work around access errors. The local HTTP cookie is HttpOnly and SameSite Strict, not Secure. No multi-user authentication is provided; use a trusted OS account and browser profile.
 
 ## Verification and troubleshooting
 
