@@ -12,6 +12,8 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 from playwright.sync_api import sync_playwright
+from verify_professional_layouts import assert_layout, verify_layouts
+from verify_ui_states import verify_states
 
 base = os.environ.get("OSINT_TEST_URL", "http://127.0.0.1:8765").rstrip("/")
 if urlsplit(base).hostname != "127.0.0.1":
@@ -53,6 +55,9 @@ with sync_playwright() as playwright:
     try:
         page.goto(base)
         assert page.locator("h1").count() == 1
+        assert page.locator("html").get_attribute("data-theme") == "light", (
+            "Bright theme must be the fresh-profile default"
+        )
         page.screenshot(path=str(output / "desktop-empty.png"), full_page=True)
         page.goto(base + "/assessments/new")
         page.locator('input[name="mode"][value="demo"]').check()
@@ -101,6 +106,9 @@ with sync_playwright() as playwright:
             != "none"
         )
         page.screenshot(path=str(output / "desktop-overview.png"), full_page=True)
+        page.locator("#theme-toggle").click()
+        assert page.locator("html").get_attribute("data-theme") == "dark"
+        page.screenshot(path=str(output / "desktop-dark.png"), full_page=True)
         page.locator("#theme-toggle").click()
         assert page.locator("html").get_attribute("data-theme") == "light"
         page.screenshot(path=str(output / "desktop-light.png"), full_page=True)
@@ -167,6 +175,16 @@ with sync_playwright() as playwright:
         report_page.set_content(
             (output / "assessment.html").read_text(encoding="utf-8")
         )
+        for report_width in (1440, 1920, 768, 390, 360):
+            report_page.set_viewport_size({"width": report_width, "height": 1050})
+            assert_layout(report_page, f"standalone-report/{report_width}")
+        report_page.set_viewport_size({"width": 1440, "height": 1050})
+        report_page.locator("details").first.locator("summary").click()
+        assert_layout(report_page, "standalone-report/expanded-json")
+        report_page.locator("details").first.locator("summary").click()
+        report_page.screenshot(
+            path=str(output / "professional-report-screen.png"), full_page=False
+        )
         report_page.set_viewport_size({"width": 794, "height": 1123})
         report_page.emulate_media(media="print")
         assert report_page.evaluate(
@@ -187,6 +205,8 @@ with sync_playwright() as playwright:
             prefer_css_page_size=True,
         )
         report_page.screenshot(path=str(output / "a4-report.png"), full_page=True)
+        verify_layouts(playwright, context, page, base, output, identifier, options)
+        verify_states(playwright, output, options)
         page.goto(base + "/history")
         page.once("dialog", lambda dialog: dialog.accept())
         page.locator(f'form[action="/assessments/{identifier}/delete"] button').click()

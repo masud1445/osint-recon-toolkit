@@ -4,14 +4,14 @@ The dashboard adds an interactive local interface around the existing passive co
 
 ## Exact Mac Terminal startup
 
-The corrected dashboard is on [`fix/dashboard-validation`](https://github.com/masud1445/osint-recon-toolkit/tree/fix/dashboard-validation). The separate [`recovery/local-intelligence-dashboard`](https://github.com/masud1445/osint-recon-toolkit/tree/recovery/local-intelligence-dashboard) branch retains the unchanged recovery checkpoint (`cefb039`). The default branch can still contain the older CLI release; do not rely on a default-branch checkout for this interface.
+The bright professional dashboard and workbook are on [`feature/professional-workspace-redesign`](https://github.com/masud1445/osint-recon-toolkit/tree/feature/professional-workspace-redesign). The separate [`recovery/local-intelligence-dashboard`](https://github.com/masud1445/osint-recon-toolkit/tree/recovery/local-intelligence-dashboard) branch retains the unchanged recovery checkpoint (`cefb039`). The default branch can still contain the older CLI release; do not rely on a default-branch checkout for this interface.
 
 For a new clone, use a new Terminal window:
 
 ```sh
 git clone https://github.com/masud1445/osint-recon-toolkit.git
 cd osint-recon-toolkit
-git switch fix/dashboard-validation
+git switch feature/professional-workspace-redesign
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[test]'
@@ -35,8 +35,8 @@ If this reports local changes, stop and preserve them before continuing. From a 
 
 ```sh
 git fetch origin
-git switch fix/dashboard-validation
-git pull --ff-only origin fix/dashboard-validation
+git switch feature/professional-workspace-redesign
+git pull --ff-only origin feature/professional-workspace-redesign
 source .venv/bin/activate
 python -m pip install -e '.[test]'
 osint-dashboard
@@ -52,9 +52,9 @@ osint-dashboard --port 8766 --data-dir "$HOME/.osint-recon-internship"
 
 Ports are restricted to 1024–65535. The host cannot be changed through this command. Use only one dashboard process per data directory, and do not tunnel, publicly proxy or otherwise expose the local endpoint. Installing dependencies may need Internet access; the installed Demo workflow uses no provider connection.
 
-## First presentation: Demo
+## Offline training: Demo
 
-1. Open **New assessment** and choose **Demo**. No target, source selection, keys, authorization declaration or provider license is required.
+1. Open **New Reconnaissance Assessment** and choose **Demo**. No target, source selection, keys, authorization declaration or provider license is required.
 2. Start the assessment. The queue/progress view leads to results without contacting a provider.
 3. Review the fixed fictional registration record, service context and reputation statistics. The scope uses `internship-lab.example` and documentation-only IP `192.0.2.10`.
 4. Inspect findings, recommendations, source availability and normalized JSON disclosures. A concise Demo indicator identifies the presentation; structured evidence and exports keep per-record/per-finding synthetic flags.
@@ -94,12 +94,14 @@ At this implementation review, provider hosts are blocked by cloud egress policy
 
 ## Interface and report workflow
 
-- **Overview:** history-based metrics and source-backed summaries. Availability percentages are retrieval coverage, not risk scores.
-- **New assessment:** mode/target/source validation, authorization and provider-license acknowledgements.
-- **Results and evidence:** progress for queued/running work, source statuses, source/collection timestamps, review items, recommendations and expandable normalized JSON.
-- **Findings:** review items remain tied to their source and assessment. Synthetic items never become verified live observations.
-- **Sources:** supported API contracts and server-side credential presence; no credential value controls.
-- **History:** recent records, filtering, exports and deliberate deletion of finished/error assessments. A fresh assessment is how to collect new information.
+The default theme uses light blue-grey backgrounds, white content panels, coordinated blue/teal accents and enlarged typography. Use the theme control for the optional dark alternative; appearance never changes an assessment mode or source state. The [operations workbook](OSINT_OPERATIONS_WORKBOOK.md) provides the end-to-end method, [scope form](SCOPE_AUTHORIZATION_FORM.md), synthetic exercises and [mini-audit checklist](MINI_AUDIT_CHECKLIST.md).
+
+- **Assessment Dashboard:** history-based metrics and source-backed summaries. Availability percentages are retrieval coverage, not risk scores.
+- **New Reconnaissance Assessment:** mode/target/source validation, authorization and provider-license acknowledgements.
+- **Evidence Review / Collection Status:** progress for queued/running work, source statuses, source/collection timestamps, review items, recommendations and expandable normalized JSON.
+- **Findings & Recommendations:** review items remain tied to their source and assessment. Synthetic items never become verified live observations.
+- **Intelligence Sources:** supported API contracts and server-side credential presence; no credential value controls.
+- **Assessment History:** recent records, filtering, exports and deliberate deletion of finished/error assessments. A fresh assessment is how to collect new information.
 - **Theme and navigation:** responsive sidebar/top navigation and local light/dark preference; all assets are packaged locally.
 
 The standalone HTML report uses executive cards, source summaries, field tables, source-availability/vendor charts only when data supports them, UTC timestamps and findings/recommendations. Native disclosures work without JavaScript. Print styling switches to white A4 pages. Source, target and provider text remain escaped; CSV cells neutralize formula triggers and JSON/CSV preserve mode/provenance.
@@ -116,7 +118,7 @@ The session signing key changes at restart. Reload browser forms after restartin
 
 ## Verification and troubleshooting
 
-See [dashboard validation evidence](WEB_VALIDATION.md) for executed checks, platform/browser evidence and any remaining limitations. Earlier CLI validation records describe their exact historical commits. New remote CI outcomes must be verified for the final dashboard commit; local or mocked success does not establish live provider access.
+See [professional redesign validation](PROFESSIONAL_VALIDATION.md) for executed checks, platform/browser evidence and any remaining limitations. Earlier CLI validation records describe their exact historical commits. New remote CI outcomes must be verified for the final dashboard commit; local or mocked success does not establish live provider access.
 
 | Symptom | Action |
 | --- | --- |

@@ -1,6 +1,6 @@
 # Authorized OSINT assessment workflow
 
-For an internship presentation without owned/approved targets, use the separate [offline demo workflow](DEMO_GUIDE.md). The steps below apply to live collection only.
+For an internship presentation without owned/approved targets, use the separate [offline demo workflow](DEMO_GUIDE.md). The steps below apply to live collection only. Use the complete [operations workbook](OSINT_OPERATIONS_WORKBOOK.md), reusable [scope form](SCOPE_AUTHORIZATION_FORM.md) and [mini-audit checklist](MINI_AUDIT_CHECKLIST.md) for preparation, review and sign-off.
 
 1. Record written authorization, target owner, exact domain/IP, permitted sources, purpose, dates, retention and responsible analyst outside the tool. Confirm applicable API contracts and institutional policies.
 2. Prepare a dedicated Python environment and API keys through approved secret management. Check subscriptions and VirusTotal noncommercial or commercial entitlement.

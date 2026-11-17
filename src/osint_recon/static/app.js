@@ -1,7 +1,9 @@
 "use strict";
 const root = document.documentElement;
+root.dataset.theme = "light";
 try { const saved = localStorage.getItem("osint-theme"); if (saved === "light" || saved === "dark") root.dataset.theme = saved; } catch (_) {}
 const theme = document.getElementById("theme-toggle");
+if (theme) theme.setAttribute("aria-label", root.dataset.theme === "light" ? "Switch to dark theme" : "Switch to light theme");
 if (theme) theme.addEventListener("click", () => { const next = root.dataset.theme === "light" ? "dark" : "light"; root.dataset.theme = next; try { localStorage.setItem("osint-theme", next); } catch (_) {} theme.setAttribute("aria-label", `Switch to ${next === "dark" ? "light" : "dark"} theme`); });
 const nav = document.getElementById("nav-toggle"), sidebar = document.getElementById("sidebar");
 if (nav && sidebar) { nav.addEventListener("click", () => { const open = sidebar.classList.toggle("open"); nav.setAttribute("aria-expanded", String(open)); }); document.addEventListener("click", event => { if (sidebar.classList.contains("open") && !sidebar.contains(event.target) && !nav.contains(event.target)) { sidebar.classList.remove("open"); nav.setAttribute("aria-expanded", "false"); } }); document.addEventListener("keydown", event => { if (event.key === "Escape") { sidebar.classList.remove("open"); nav.setAttribute("aria-expanded", "false"); } }); }

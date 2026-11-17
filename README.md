@@ -4,7 +4,7 @@ A local web dashboard and portable Python CLI for authorized, passive domain and
 
 ## What it does
 
-- Provides a responsive navy/cyan dashboard with overview metrics, source-backed charts, assessment creation, progress, source evidence, findings, history, report export and light/dark themes.
+- Provides a responsive bright blue/teal dashboard with readable typography, evidence-backed charts, assessment creation, progress, source evidence, findings, history, report export and an optional dark theme.
 - Runs a single-user Flask application through Waitress on **127.0.0.1 only**, with local SQLite persistence and server-side API credentials.
 
 - Retrieves existing **RDAP registration records** (the structured successor to WHOIS), **Shodan host/domain metadata**, and **VirusTotal v3 domain/IP records**.
@@ -30,14 +30,14 @@ The cloud checkout uses `/workspace/osint-venv`; activate it with `. /workspace/
 
 ## Start the dashboard on a Mac
 
-Use the published [`fix/dashboard-validation`](https://github.com/masud1445/osint-recon-toolkit/tree/fix/dashboard-validation) branch for these corrections. The [`recovery/local-intelligence-dashboard`](https://github.com/masud1445/osint-recon-toolkit/tree/recovery/local-intelligence-dashboard) branch preserves the recovered implementation at `cefb039`; the repository's default branch can still point to the older CLI release. Switching explicitly is required.
+Use the published [`feature/professional-workspace-redesign`](https://github.com/masud1445/osint-recon-toolkit/tree/feature/professional-workspace-redesign) branch for the bright professional interface and operations workbook. The [`recovery/local-intelligence-dashboard`](https://github.com/masud1445/osint-recon-toolkit/tree/recovery/local-intelligence-dashboard) branch preserves the recovered implementation at `cefb039`; the repository's default branch can still point to the older CLI release. Switching explicitly is required.
 
 For a new clone, start a new Terminal window:
 
 ```sh
 git clone https://github.com/masud1445/osint-recon-toolkit.git
 cd osint-recon-toolkit
-git switch fix/dashboard-validation
+git switch feature/professional-workspace-redesign
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[test]'
@@ -48,8 +48,8 @@ For an existing clone, use its current directory rather than cloning over it. Fi
 
 ```sh
 git fetch origin
-git switch fix/dashboard-validation
-git pull --ff-only origin fix/dashboard-validation
+git switch feature/professional-workspace-redesign
+git pull --ff-only origin feature/professional-workspace-redesign
 source .venv/bin/activate
 python -m pip install -e '.[test]'
 osint-dashboard
@@ -63,7 +63,7 @@ Keep that Terminal running. In another Terminal tab, open your local browser:
 open http://127.0.0.1:8765
 ```
 
-Choose **New assessment → Demo** for a completely fictional workflow without target ownership or keys. Choose **Live** only for an approved target, select sources, confirm authorization and record a scope-approval reference. Every new live run requires its own authorization acknowledgement. Live failures retain unavailable/error states and never turn into demo records.
+Choose **New Reconnaissance Assessment → Demo** for a completely fictional workflow without target ownership or keys. Choose **Live** only for an approved target, select sources, confirm authorization and record a scope-approval reference. Every new live run requires its own authorization acknowledgement. Live failures retain unavailable/error states and never turn into demo records.
 
 Default history is stored at `~/.osint-recon/assessments.sqlite3`. Optional startup settings:
 
@@ -73,7 +73,7 @@ osint-dashboard --port 8766 --data-dir "$HOME/.osint-recon-internship"
 
 Ports must be 1024–65535. There is no public-host option or debug server. Run one dashboard process per data directory, on a trusted personal OS account; do not expose it through a tunnel, reverse proxy or LAN listener. Read [dashboard operation and security](docs/DASHBOARD.md) before live use.
 
-## Offline internship demonstration
+## Offline training workflow
 
 No domain ownership, API keys, target authorization or network access is needed for this **fictional local demonstration** once the application and dependencies are installed:
 
@@ -102,6 +102,10 @@ Exit status: `0` = every selected source returned a record; `1` = one or more so
 
 Outputs use fixed names `assessment.html`, `assessment.json`, `assessment.csv`. Use a new output directory per assessment; existing files are never overwritten. Reports may contain sensitive asset metadata. Protect the directory using OS permissions, especially on Windows where POSIX mode bits do not establish an ACL.
 
+The bright theme is the default; optional dark mode is stored as a browser preference. The engine, authorization checks, history and exports are shared between themes. See the [operations workbook](docs/OSINT_OPERATIONS_WORKBOOK.md) for the standardized workflow, assessed synthetic exercises and analyst handover.
+
+![Bright dashboard with synthetic records](docs/screenshots/professional-desktop.png)
+
 ## Evidence and limits
 
 “Observed” confirms retrieval of a source record, not current reachability, ownership, a vulnerability, or compromise. The self-contained HTML report includes executive cards, source-availability and vendor-classification charts when supported by evidence, source tables, readable UTC timestamps, collapsible normalized JSON, findings, recommendations and white A4 print styling. Charts do not infer risk scores or invent missing data. Provider timestamps are preserved separately where available; no overall risk score is fabricated.
@@ -112,12 +116,16 @@ Explicit offline demo fixtures are shipped in a separate module and are never re
 
 ## Development and assessment
 
+- [Operations workbook](docs/OSINT_OPERATIONS_WORKBOOK.md)
+- [Supervisor compliance and remaining gaps](docs/SUPERVISOR_COMPLIANCE.md)
+- [Scope and authorization form](docs/SCOPE_AUTHORIZATION_FORM.md)
+- [Mini-audit checklist](docs/MINI_AUDIT_CHECKLIST.md)
 - [Initial audit and implementation plan](docs/AUDIT_AND_PLAN.md)
 - [Architecture and API contracts](docs/ARCHITECTURE.md)
 - [Authorized OSINT workflow](docs/WORKFLOW.md)
 - [Dashboard guide and Mac startup](docs/DASHBOARD.md)
 - [Operator manual and troubleshooting](docs/OPERATOR_MANUAL.md)
-- [Dashboard validation evidence](docs/WEB_VALIDATION.md)
+- [Professional redesign validation](docs/PROFESSIONAL_VALIDATION.md)
 - [Security policy](SECURITY.md)
 - [Initial validation evidence](docs/VALIDATION.md)
 - [Post-push verification, security fixes and main-branch proposal](docs/POST_PUSH_REVIEW.md)
