@@ -1,4 +1,6 @@
-# Professional workspace redesign: verification record
+# Professional workspace redesign: verification record — 5d22f8f
+
+This preserved record describes the professional redesign at `5d22f8f0c51ac30a6b35549fce6f99caf9ccb959`. See [release readiness](RELEASE_READINESS.md) for the subsequent documentation release; earlier verification is not proof for a newer commit.
 
 ## Scope and preservation
 
@@ -30,7 +32,7 @@ Local platform: Linux, Python 3.12.14, Chromium 156.
 | Browser functional workflow | Passed actual same-origin form/CSRF submission, async demo completion, disclosures, theme persistence, source/license controls, invalid-input rejection, navigation, history filters, downloads and deletion |
 | Network behavior | No external requests or unexpected JavaScript/console errors during the offline review |
 
-The counts above are executed local results, not an assertion of live provider access. GitHub Actions runs the OS/Python matrix, audit and browser checks for the exact pushed commit. See [Actions filtered to this branch](https://github.com/masud1445/osint-recon-toolkit/actions?query=branch%3Afeature%2Fprofessional-workspace-redesign); the final chat delivery supplies its exact commit/run link after completion. An earlier branch's green run is not evidence for this revision.
+The counts above are executed local results, not an assertion of live provider access. [GitHub Actions run 44060415987](https://github.com/masud1445/osint-recon-toolkit/actions/runs/44060415987) succeeded on exact commit `5d22f8f0c51ac30a6b35549fce6f99caf9ccb959`: all **11 jobs** passed (nine OS/Python combinations, dependency checks and interface/browser checks), in **5m 35s**. Each job conclusion was checked. This establishes that revision's CI result only; use the release-readiness record for later commits.
 
 ## Responsive, typography and zoom checks
 

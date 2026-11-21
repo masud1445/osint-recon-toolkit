@@ -2,7 +2,7 @@
 
 ## Local dashboard
 
-Use the professional redesign branch `feature/professional-workspace-redesign`; `recovery/local-intelligence-dashboard` preserves the original recovered checkpoint. Inspect and preserve any local changes before switching branches. Start the installed application with `osint-dashboard`, then use your local browser at `http://127.0.0.1:8765`. The full [dashboard guide](DASHBOARD.md) includes exact Mac Terminal installation commands. The server binds only to IPv4 loopback through Waitress; it has no public host option and does not enable Flask debug mode. Stop it with Control-C in its Terminal.
+Use the documentation release branch `feature/academic-release-readiness`; `recovery/local-intelligence-dashboard` preserves the original recovered checkpoint. Inspect and preserve any local changes before switching branches. Start the installed application with `osint-dashboard`, then use your local browser at `http://127.0.0.1:8765`. The [README](../README.md#install-on-macos-linux-or-windows) provides explicit macOS, Windows and Linux installation commands; the full [dashboard guide](DASHBOARD.md) includes exact Mac Terminal startup commands. The server binds only to IPv4 loopback through Waitress; it has no public host option and does not enable Flask debug mode. Stop it with Control-C in its Terminal.
 
 Assessment Dashboard, New Reconnaissance Assessment, Collection Status, Evidence Review, Findings & Recommendations, Intelligence Sources and Assessment History share the existing collection/reporting engine. Demo and Live remain separate submission paths. Mode/source filters and source-evidence disclosures help review records; theme controls are saved locally by the browser. Dashboard creation and deletion require CSRF tokens from the current session; after restarting the server, reload old forms before submitting. The `same-origin` referrer policy allows legitimate local browser forms to supply their origin without sending referrers to other origins. Null/foreign origins and missing or incorrect CSRF tokens remain rejected.
 
@@ -30,7 +30,7 @@ The fixed fictional scope is `internship-lab.example` plus documentation IP `192
 
 A concise visible demo indicator, per-record classification attributes/badges, JSON provenance fields and every CSV row identify synthetic training data. Demo uses JSON schema 1.1 with `mode: offline demonstration`, `is_synthetic: true`, `status: synthetic`, `data_classification` and `scenario_id`. `observed_sources` is always 0; `synthetic_sources` is 3. Each finding has its own synthetic flag and label. No real provider verdict, service exposure or compromise is implied.
 
-`generated_at` is the real report-preparation timestamp. Demo `collected_at`, RDAP events and source analysis/update dates are fixed **fictional fixture timestamps**, not a live collection or an age-based risk conclusion. See [the presentation guide](DEMO_GUIDE.md) for the complete workflow.
+`generated_at` is the real report-preparation timestamp. Demo `collected_at`, RDAP events and source analysis/update dates are fixed **fictional fixture timestamps**, not a live collection or an age-based risk conclusion. See [the presentation guide](DEMO_GUIDE.md) for the complete workflow, the [two-page lab](teaching/student-laboratory.pdf) for classroom use, and the [reviewed synthetic exports](examples/offline-demo/README.md) for a ready-to-open example.
 
 ## Before live collection
 
@@ -71,12 +71,12 @@ Live reports are labeled `live-source retrieval` to describe the execution path;
 | Local queue full | Wait for existing jobs to finish; do not launch duplicate processes |
 | Export failure | Use a new writable output directory with trusted parents; existing files are intentionally protected |
 
-For live collection, network policy must permit only the sources used: `rdap.org` and applicable approved registry hosts; `api.shodan.io`; `www.virustotal.com`. Documentation access additionally needs `developer.shodan.io`, `docs.virustotal.com`, and relevant RDAP documentation hosts. At this implementation review, the cloud policy blocks the intelligence/documentation hosts and no API keys are configured; offline/mocked tests require no changes. Live integrations remain unverified. Never insert real keys into repository network settings or saved shell scripts.
+For live collection, network policy must permit only the sources used: `rdap.org` and applicable approved registry hosts; `api.shodan.io`; `www.virustotal.com`. Documentation access additionally needs `developer.shodan.io`, `docs.virustotal.com`, and relevant RDAP documentation hosts. Live integrations remain unverified; offline/mocked tests require no source access. Configure keys only in the approved server process environment or secret manager, never in repository files or saved shell scripts.
 
 ## Acceptance and maintenance
 
-Run `python -m pytest --cov=osint_recon --cov-report=term-missing` after changes. Dependency checks: install `pip-audit`, then `python -m pip_audit`; use `--cache-dir /tmp/osint-audit-cache` on this cloud machine. Review CI results independently after pushing. A locally passing Linux suite is not evidence that remote Windows/macOS runs passed.
+Run `python -m pytest --cov=osint_recon --cov-report=term-missing` after changes. Dependency checks: install `pip-audit`, then `python -m pip_audit`. If the default cache is unwritable, set `--cache-dir` to a private writable directory on your own computer. Review CI results independently after pushing. A locally passing Linux suite is not evidence that remote Windows/macOS runs passed.
 
 For a genuine authorized acceptance test, independently confirm the current official API contracts and licensing; configure source access and keys; select an explicitly approved target; run each connector; compare the selected fields and timestamps to provider records; inspect unavailable/error behavior; record sanitized outcomes privately. Do not place target reports or keys in Git. No live acceptance test was performed during implementation.
 
-Use existing isolated checkouts in cloud tasks; do not create worktrees unless explicitly requested. The standalone CLI needs no service process. Restart the dashboard after code, environment or dependency changes, then reload its pages. Reinstall with `python -m pip install -e ".[test]"` when dependencies or the checkout location change.
+The standalone CLI needs no service process. Restart the dashboard after code, environment or dependency changes, then reload its pages. Reinstall with `python -m pip install -e ".[test]"` when dependencies or the checkout location change.

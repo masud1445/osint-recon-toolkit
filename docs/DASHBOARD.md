@@ -4,16 +4,17 @@ The dashboard adds an interactive local interface around the existing passive co
 
 ## Exact Mac Terminal startup
 
-The bright professional dashboard and workbook are on [`feature/professional-workspace-redesign`](https://github.com/masud1445/osint-recon-toolkit/tree/feature/professional-workspace-redesign). The separate [`recovery/local-intelligence-dashboard`](https://github.com/masud1445/osint-recon-toolkit/tree/recovery/local-intelligence-dashboard) branch retains the unchanged recovery checkpoint (`cefb039`). The default branch can still contain the older CLI release; do not rely on a default-branch checkout for this interface.
+The professional dashboard, workbook and final teaching handouts are on [`feature/academic-release-readiness`](https://github.com/masud1445/osint-recon-toolkit/tree/feature/academic-release-readiness). The separate [`recovery/local-intelligence-dashboard`](https://github.com/masud1445/osint-recon-toolkit/tree/recovery/local-intelligence-dashboard) branch retains the unchanged recovery checkpoint (`cefb039`). The default branch can still contain the older CLI release; do not rely on a default-branch checkout for this interface.
 
 For a new clone, use a new Terminal window:
 
 ```sh
 git clone https://github.com/masud1445/osint-recon-toolkit.git
 cd osint-recon-toolkit
-git switch feature/professional-workspace-redesign
+git switch feature/academic-release-readiness
 python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -e '.[test]'
 osint-dashboard
 ```
@@ -35,9 +36,10 @@ If this reports local changes, stop and preserve them before continuing. From a 
 
 ```sh
 git fetch origin
-git switch feature/professional-workspace-redesign
-git pull --ff-only origin feature/professional-workspace-redesign
+git switch feature/academic-release-readiness
+git pull --ff-only origin feature/academic-release-readiness
 source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -e '.[test]'
 osint-dashboard
 ```
@@ -52,6 +54,8 @@ osint-dashboard --port 8766 --data-dir "$HOME/.osint-recon-internship"
 
 Ports are restricted to 1024–65535. The host cannot be changed through this command. Use only one dashboard process per data directory, and do not tunnel, publicly proxy or otherwise expose the local endpoint. Installing dependencies may need Internet access; the installed Demo workflow uses no provider connection.
 
+For Windows and Linux setup, use the explicit [cross-platform installation commands](../README.md#install-on-macos-linux-or-windows). Windows can invoke the environment's executables directly without changing PowerShell execution policy. No external database service is needed.
+
 ## Offline training: Demo
 
 1. Open **New Reconnaissance Assessment** and choose **Demo**. No target, source selection, keys, authorization declaration or provider license is required.
@@ -60,7 +64,7 @@ Ports are restricted to 1024–65535. The host cannot be changed through this co
 4. Inspect findings, recommendations, source availability and normalized JSON disclosures. A concise Demo indicator identifies the presentation; structured evidence and exports keep per-record/per-finding synthetic flags.
 5. Export HTML, JSON or CSV. The HTML includes a professional print layout for A4; expand JSON disclosures before printing if you want their complete content included.
 
-Demo success verifies the offline workflow only. It does not demonstrate provider account access, a real target, a current exposure, or live connector acceptance. Existing CLI usage remains available:
+The concise [student lab](teaching/student-laboratory.pdf) and [reviewed fictional sample](examples/offline-demo/README.md) support teaching without a real domain or account. Demo success verifies the offline workflow only. It does not demonstrate provider account access, a real target, a current exposure, or live connector acceptance. Existing CLI usage remains available:
 
 ```sh
 osint-recon --demo --output reports/supervisor-demo
@@ -90,7 +94,7 @@ Selecting VirusTotal also requires a permitted license declaration. Public API t
 
 The collector retrieves existing provider records with existing timeouts, bounds, retry and pacing rules. It does not scan a target, submit a URL/file, request a rescan or exploit anything. A live report remains LIVE even when every source fails. Evidence JSON displays normalized selected provider fields, not every raw response field. Curated RDAP registry coverage and Shodan domain page 1 remain explicit limits; banners, personal contact entities and arbitrary source links are minimized.
 
-At this implementation review, provider hosts are blocked by cloud egress policy and no API keys are configured. No live API integration is verified. Operational acceptance requires approved targets, current terms/API review, secure credentials, permitted destinations and comparison of a genuine read-only result against the provider. No authorization or credential is implied by being an internship project.
+No genuine live API acceptance result is recorded for this release. Offline/demo checks and mocked provider responses do not verify real source access. Operational acceptance requires approved targets, current terms/API review, secure credentials, permitted destinations and comparison of a genuine read-only result against the provider. No authorization or credential is implied by being an internship project.
 
 ## Interface and report workflow
 
@@ -118,7 +122,7 @@ The session signing key changes at restart. Reload browser forms after restartin
 
 ## Verification and troubleshooting
 
-See [professional redesign validation](PROFESSIONAL_VALIDATION.md) for executed checks, platform/browser evidence and any remaining limitations. Earlier CLI validation records describe their exact historical commits. New remote CI outcomes must be verified for the final dashboard commit; local or mocked success does not establish live provider access.
+See [documentation release readiness](RELEASE_READINESS.md) for the final release checks and [professional redesign validation](PROFESSIONAL_VALIDATION.md) for the preserved earlier UI/browser evidence. Earlier CLI validation records describe their exact historical commits. New remote CI outcomes must be verified for the final dashboard commit; local or mocked success does not establish live provider access.
 
 | Symptom | Action |
 | --- | --- |

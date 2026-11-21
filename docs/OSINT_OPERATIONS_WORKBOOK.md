@@ -43,10 +43,11 @@ Requirements: Python 3.10 or later, Git and a supported local browser. Installat
 Use a new Terminal window and an unused destination directory:
 
 ```sh
-git clone --branch feature/professional-workspace-redesign https://github.com/masud1445/osint-recon-toolkit.git
+git clone --branch feature/academic-release-readiness https://github.com/masud1445/osint-recon-toolkit.git
 cd osint-recon-toolkit
 python3 -m venv .venv
 source .venv/bin/activate
+python -m pip install --upgrade pip
 python -m pip install -e '.[test]'
 osint-dashboard
 ```
@@ -57,9 +58,9 @@ Keep that Terminal running. In another tab:
 open http://127.0.0.1:8765
 ```
 
-For an existing clone, preserve local work before switching. From a clean working tree, fetch, switch to `feature/professional-workspace-redesign`, activate its virtual environment and reinstall. Do not reset or clone over existing work. See [dashboard instructions](DASHBOARD.md) for update commands and optional `--port`/`--data-dir` settings.
+For an existing clone, preserve local work before switching. From a clean working tree, fetch, switch to `feature/academic-release-readiness`, activate its virtual environment and reinstall. Do not reset or clone over existing work. See [dashboard instructions](DASHBOARD.md) for update commands and optional `--port`/`--data-dir` settings.
 
-On Linux, activate with `source .venv/bin/activate`. On Windows PowerShell, activate with `.venv\Scripts\Activate.ps1`. The underlying package and tests are portable; no real-device browser certification is claimed.
+For complete Linux and Windows instructions, use the [cross-platform README installation blocks](../README.md#install-on-macos-linux-or-windows). Linux creates the environment with `python3 -m venv .venv`. Windows PowerShell can run `.\.venv\Scripts\python.exe` and `.\.venv\Scripts\osint-dashboard.exe` directly without activation or an execution-policy change. The underlying package and tests are portable; no real-device browser certification is claimed.
 
 ### Validate the environment
 
@@ -68,7 +69,7 @@ python -m pytest --cov=osint_recon --cov-report=term-missing
 python -m pip check
 ```
 
-Use the final commit's [professional validation record](PROFESSIONAL_VALIDATION.md) for actual counts, viewport checks and CI evidence. Do not cite historical reports as verification of a newer commit.
+Use the final commit's [release readiness record](RELEASE_READINESS.md), with the earlier [professional validation record](PROFESSIONAL_VALIDATION.md) retained as historical evidence, for actual counts, viewport checks and CI evidence. Do not cite historical reports as verification of a newer commit.
 
 ## 4. Registration intelligence: RDAP and WHOIS
 
@@ -187,7 +188,7 @@ Demo uses reserved `internship-lab.example` and documentation-only `192.0.2.10`.
 
 ## 10. Practical teaching exercises
 
-All exercises use the built-in Demo or supplied synthetic test responses. Do not contact the fixture domain/IP. Record outputs as training artifacts, never operational intelligence.
+The [two-page student handout](teaching/student-laboratory.pdf) ([HTML source](teaching/student-laboratory.html)) is the concise classroom route through these existing exercises. The [reviewed sample exports](examples/offline-demo/README.md) can be inspected before installation. All exercises use the built-in Demo or supplied synthetic test responses. Do not contact the fixture domain/IP. Record outputs as training artifacts, never operational intelligence.
 
 ### Exercise 1 — Scope and provenance (10 marks)
 
@@ -239,7 +240,7 @@ All exercises use the built-in Demo or supplied synthetic test responses. Do not
 
 ## 11. Operator-ready mini-audit deliverable
 
-Use the separate [mini-audit checklist](MINI_AUDIT_CHECKLIST.md) for preflight, collection, evidence review, delivery, retention and sign-off. A minimal handover includes:
+Use the [one-page executive overview](briefings/mini-audit-overview.pdf) ([HTML source](briefings/mini-audit-overview.html)) for briefing and the existing [mini-audit checklist](MINI_AUDIT_CHECKLIST.md) for preflight, collection, evidence review, delivery, retention and sign-off. A minimal handover includes:
 
 - Approved scope/authorization record and a run log identifying assessment IDs.
 - Selected revision/environment inventory and sanitized collection-coverage notes.
@@ -253,7 +254,7 @@ Before using this process for a real client, complete genuine authorized provide
 
 The database defaults to `~/.osint-recon/assessments.sqlite3`. It contains reports and authorization metadata and is not encrypted or signed. Newly created directories/files request POSIX 0700/0600 permissions; review existing path permissions and Windows ACLs separately. Store all reports and backups under approved controls. Do not expose the local server through a tunnel, LAN binding or public reverse proxy.
 
-The application redacts configured keys, escapes output, protects CSV cells and minimizes source data, but operator review is still required. Do not log raw requests/bodies or enable HTTP debug logging for a source whose key uses a query parameter. Keep exported evidence outside Git.
+The application redacts configured keys, escapes output, protects CSV cells and minimizes source data, but operator review is still required. Do not log raw requests/bodies or enable HTTP debug logging for a source whose key uses a query parameter. Keep operator/live exports outside Git. Only the separately reviewed built-in fictional sample in `docs/examples/offline-demo/` is published as a teaching artifact; it must never contain operator records.
 
 Optional file hashes can support an external integrity inventory. They do not create identity signatures, legal authority or an automatic chain of custody. Record custody/transfer/deletion actions using your organization's procedure. History deletion removes a SQLite row; it does not guarantee secure media erasure or delete exports/backups.
 
@@ -276,6 +277,6 @@ Optional file hashes can support an external integrity inventory. They do not cr
 
 ## 14. Known limits and acceptance record
 
-Genuine live RDAP/Shodan/VirusTotal acceptance remains unverified. Provider hosts and credentials were unavailable in the implementation environment. Shodan domain collection is first-page only; RDAP uses curated registry destinations. API account quotas, current terms and source accuracy require review. The local application has no multi-user authentication, public-hosting security model, database encryption, evidence signing or whole-job deadline. Browser viewport testing is not a real-device/accessibility certification.
+Genuine live RDAP/Shodan/VirusTotal acceptance remains unverified. No genuine authorized provider acceptance result is recorded for this release. Shodan domain collection is first-page only; RDAP uses curated registry destinations. API account quotas, current terms and source accuracy require review. The local application has no multi-user authentication, public-hosting security model, database encryption, evidence signing or whole-job deadline. Browser viewport testing is not a real-device/accessibility certification.
 
-Use [supervisor compliance](SUPERVISOR_COMPLIANCE.md) for the formal requirement matrix and [professional validation](PROFESSIONAL_VALIDATION.md) for actual test, screenshot and exact-commit CI evidence. A passing test suite or attractive demonstration does not establish commercial readiness or a verified real attack surface.
+Use [supervisor compliance](SUPERVISOR_COMPLIANCE.md) for the formal requirement matrix and [release readiness](RELEASE_READINESS.md) for final execution results. The preserved [professional validation](PROFESSIONAL_VALIDATION.md) records the earlier UI checks and screenshots. A passing test suite or attractive demonstration does not establish commercial readiness or a verified real attack surface.

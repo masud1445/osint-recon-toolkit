@@ -11,3 +11,27 @@ htmlcov/
 .pytest_cache/
 build/
 dist/
+
+# Local operator history, database sidecars, process locks and logs
+*.sqlite
+*.sqlite-*
+*.sqlite3
+*.sqlite3-*
+*.db
+*.db-*
+.dashboard.lock
+.osint-recon/
+*.log
+*.tmp
+*.bak
+.DS_Store
+.ruff_cache/
+
+# Export filenames are private by default, even outside reports/
+assessment.html
+assessment.json
+assessment.csv
+# Reviewed built-in fictional documentation sample only (never operator data)
+!/docs/examples/offline-demo/assessment.html
+!/docs/examples/offline-demo/assessment.json
+!/docs/examples/offline-demo/assessment.csv

@@ -1,4 +1,6 @@
-# Post-push verification and security review
+# Historical post-push verification and security review
+
+This review covers the early CLI/security revision. Its test counts and CI results remain historical evidence; see [release readiness](RELEASE_READINESS.md) for current final verification. The main-branch procedure remains a proposal requiring owner approval.
 
 ## Original GitHub Actions results
 
@@ -58,7 +60,7 @@ The v7 action SHAs were resolved from the official repositories and their action
 5. With approval, change the default branch to main only after its checks pass. Update PR base branches, documentation links and rules where needed; leave the feature branch intact.
 6. Continue future work on short-lived feature branches and merge through reviewed, passing pull requests. A first approved main branch can share the candidate commit directly, so no merge commit or history rewrite is necessary.
 
-No main branch was created, no merge or deletion was performed, and the default remains feature/project-6-1. The environment was not published or reconfigured by this review.
+No main branch was created, no merge or deletion was performed, and the default remains feature/project-6-1.
 
 ## Before operational testing
 

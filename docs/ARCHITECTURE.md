@@ -43,7 +43,7 @@ flowchart LR
 
 RDAP follows up to three HTTPS redirects only among curated registry hosts: rdap.org, rdap.verisign.com, rdap.publicinterestregistry.org, rdap.arin.net, rdap.db.ripe.net, rdap.apnic.net, rdap.lacnic.net and rdap.afrinic.net. API credentials are never redirected. Supporting another registry requires reviewing and testing a source-code allowlist addition. The environment egress policy independently must permit the destination. Redirects to target-controlled hosts and arbitrary link traversal are not supported.
 
-Source documentation references (not successfully fetched in this environment):
+Source documentation references (current remote documentation and genuine live acceptance have not been verified for this release):
 
 - [RDAP protocol, RFC 9082](https://www.rfc-editor.org/rfc/rfc9082)
 - [RDAP JSON responses, RFC 9083](https://www.rfc-editor.org/rfc/rfc9083)
@@ -52,7 +52,7 @@ Source documentation references (not successfully fetched in this environment):
 - [VirusTotal API v3](https://docs.virustotal.com/reference/overview)
 - [VirusTotal public versus premium terms](https://docs.virustotal.com/reference/public-vs-premium-api)
 
-The official [Shodan Python client](https://github.com/achillean/shodan-python/blob/master/shodan/client.py) was retrieved and inspected: host/domain paths and query-key authentication match this implementation. The official [VirusTotal Python client](https://github.com/VirusTotal/vt-py/blob/master/vt/client.py) was retrieved and inspected: the HTTPS API v3 prefix and X-Apikey authentication match. Shodan IP requests use `minify=true` to avoid retrieving service banners, and domain requests explicitly use page 1. Provider documentation pages remain blocked by environment egress. Contracts are mocked and still need genuine authorized acceptance testing before claiming live verification.
+The official [Shodan Python client](https://github.com/achillean/shodan-python/blob/master/shodan/client.py) was retrieved and inspected: host/domain paths and query-key authentication match this implementation. The official [VirusTotal Python client](https://github.com/VirusTotal/vt-py/blob/master/vt/client.py) was retrieved and inspected: the HTTPS API v3 prefix and X-Apikey authentication match. Shodan IP requests use `minify=true` to avoid retrieving service banners, and domain requests explicitly use page 1. Current provider documentation still requires operational review. Contracts are mocked and still need genuine authorized acceptance testing before claiming live verification.
 
 ## Evidence schema 1.0
 
@@ -103,4 +103,4 @@ Standalone HTML exports remain self-contained: native disclosure panels, source-
 
 ## Professional interface and operational documentation
 
-The professional workspace changes presentation, not collection architecture: the existing engine, SQLite records, authorization requirements and exporter remain shared. The default bright design and optional dark theme use local assets and the same provenance. The [operations workbook](OSINT_OPERATIONS_WORKBOOK.md), [scope form](SCOPE_AUTHORIZATION_FORM.md), [mini-audit checklist](MINI_AUDIT_CHECKLIST.md) and [supervisor compliance matrix](SUPERVISOR_COMPLIANCE.md) distinguish concrete implementation from mocked verification and unverified operational acceptance. See [professional validation](PROFESSIONAL_VALIDATION.md) for exact-commit execution and visual evidence.
+The professional workspace changes presentation, not collection architecture: the existing engine, SQLite records, authorization requirements and exporter remain shared. The default bright design and optional dark theme use local assets and the same provenance. The [operations workbook](OSINT_OPERATIONS_WORKBOOK.md), [scope form](SCOPE_AUTHORIZATION_FORM.md), [mini-audit checklist](MINI_AUDIT_CHECKLIST.md) and [supervisor compliance matrix](SUPERVISOR_COMPLIANCE.md) distinguish concrete implementation from mocked verification and unverified operational acceptance. See [professional validation](PROFESSIONAL_VALIDATION.md) for the preserved redesign execution/visual evidence and [release readiness](RELEASE_READINESS.md) for the documentation release.

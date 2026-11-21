@@ -6,11 +6,27 @@ The assignment states:
 
 > “OSINT Automation & Recon Workbooks: Compile a structured OSINT workflow manual and modular Python scripts connecting to public APIs (Shodan, VirusTotal, WHOIS) for external reconnaissance. Teaching application: ethical hacking, footprinting and attack-surface discovery. Commercial application: an authorized External Attack Surface Reconnaissance mini-audit.”
 
-This review inspected the actual Python modules, test cases and documentation at the verified `fix/dashboard-validation` baseline (`362ee6a`) before the visual/workbook changes. It did not infer capability from the product name or screenshots. The redesign preserves the existing engine, database and security model.
+The original review inspected actual modules, tests and documentation at `fix/dashboard-validation` (`362ee6a`) before the visual/workbook changes. The final documentation review starts from the published `feature/professional-workspace-redesign` commit `5d22f8f0c51ac30a6b35549fce6f99caf9ccb959` and preserves the engine, database and security model. Capability is based on code and evidence rather than branding or screenshots.
 
-**Status terms:** **Implemented** means a concrete code or documentation deliverable exists; **mock-verified** means automated cases exercise synthetic provider responses or local behavior; **unverified** means genuine authorized operational acceptance has not been performed; **not implemented** means the capability is absent. Current executed test counts and exact final-commit CI evidence belong in [PROFESSIONAL_VALIDATION.md](PROFESSIONAL_VALIDATION.md), not in an assumption of live readiness.
+**Status terms:** **Implemented** means a code or document deliverable exists. **Mock-tested** (called mock-verified in the historical table below) means synthetic responses/local behavior were exercised. **Offline-verified** means actual local execution/export/browser checks ran without provider access. **Live-verified** requires genuine authorized provider results; none are recorded. **Unverified** marks outstanding acceptance. **Not implemented** means absent. Final counts and exact-commit CI evidence belong in [release readiness](RELEASE_READINESS.md); the [professional validation record](PROFESSIONAL_VALIDATION.md) preserves the earlier results.
 
-## Before/after compliance matrix
+## Final Pillar 6.1 deliverables
+
+| Assignment deliverable | Implemented artifact | Verification and remaining limit |
+| --- | --- | --- |
+| Standardized OSINT workflow | [Workbook](OSINT_OPERATIONS_WORKBOOK.md), [workflow](WORKFLOW.md), scope and review procedures | Documented end-to-end; offline training route executed. Real engagement acceptance **unverified**. |
+| Modular Python automation | Separate validation, connectors, transport, assessment, exporter, CLI, Flask and SQLite modules | Existing unit/integration tests **mock-tested**; local CLI/dashboard and packaging **offline-verified**. No new engine was built for the handouts. |
+| Shodan integration | Existing host/domain metadata connector with target checks, pacing and safe errors | **Implemented and mock-tested**. Genuine authentication, plan coverage and provider responses **not live-verified**. Domain collection remains page 1. |
+| VirusTotal integration | Existing v3 domain/IP retrieval with licensing acknowledgement and rate-limit handling | **Implemented and mock-tested**. Genuine account/licensing/response acceptance **unverified**; public access is not commercial permission. |
+| WHOIS/RDAP registration intelligence | HTTPS RDAP connector and [field mapping](OSINT_OPERATIONS_WORKBOOK.md#4-registration-intelligence-rdap-and-whois) | RDAP **implemented and mock-tested**, genuine live acceptance **unverified**. Legacy port-43 WHOIS **not implemented**. |
+| Teaching laboratory material | Existing five workbook exercises plus [two-page lab PDF](teaching/student-laboratory.pdf) ([HTML](teaching/student-laboratory.html)) and [synthetic sample exports](examples/offline-demo/README.md) | Built-in fictional workflow **offline-verified**; source values checked against fixtures. Rubric is suggested; supervisor grading acceptance **unverified**. |
+| External reconnaissance mini-audit methodology | [One-page executive PDF](briefings/mini-audit-overview.pdf) ([HTML](briefings/mini-audit-overview.html)), [authorization form](SCOPE_AUTHORIZATION_FORM.md), [checklist](MINI_AUDIT_CHECKLIST.md) | Methodology/deliverables **implemented**. Real client validation and commercial deployment readiness **unverified**, not claimed. |
+
+No item above is classified as live-verified. Local MacBook testing reported by the developer and CI/macOS unit tests are not provider acceptance evidence. The handouts summarize existing material; the workbook, authorization form and checklist remain the authoritative operating references.
+
+## Preserved redesign before/after compliance matrix
+
+“Before this revision” below refers to the earlier professional redesign, not the final documentation release. The current seven-deliverable summary above adds the release handouts without discarding that audit evidence.
 
 | # | Requirement | Before this revision | Current deliverable and evidence | Remaining qualification |
 | --- | --- | --- | --- | --- |
@@ -43,11 +59,11 @@ The visual redesign addresses the user's separate usability findings—default b
 
 ## What is still missing or unverified
 
-- **Genuine live acceptance:** no approved target/usable provider credentials were supplied and the implementation environment does not permit the provider hosts. Mocked tests and Demo do not verify real APIs.
+- **Genuine live acceptance:** no approved target/provider acceptance record was supplied for this review. Mocked tests and Demo do not verify real APIs.
 - **Literal legacy WHOIS:** not implemented. Clarification is needed only if protocol compatibility itself is an explicit grading criterion.
 - **Commercial deployment readiness:** not established. Suitable provider contracts, real acceptance results, scope authority, privacy/security review and operator processes are required. This local, trusted-account application is not a public multi-user service.
 - **Exhaustive attack-surface coverage:** not claimed. Related assets are not automatically queried; Shodan domain collection is first-page only and RDAP destinations are curated.
 - **Independent exposure/compromise verification:** outside this passive tool. Indexed ports and vendor classifications remain contextual observations.
 - **Evidence assurance:** no encryption/signatures or certified secure deletion. Use approved OS, storage, custody and transfer controls.
 
-Consult the final [professional validation record](PROFESSIONAL_VALIDATION.md) for actual UI, zoom, packaging, dependency and CI results. Do not substitute this matrix for execution evidence.
+Consult [release readiness](RELEASE_READINESS.md) for final checks and the preserved [professional validation record](PROFESSIONAL_VALIDATION.md) for earlier UI, zoom, packaging, dependency and CI results. Do not substitute this matrix for execution evidence.

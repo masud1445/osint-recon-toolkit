@@ -1,0 +1,6 @@
+# Keep reviewed exporter artifacts byte-for-byte on every checkout platform.
+# HTML/JSON contain LF; csv.writer emits CRLF. Do not normalize either format.
+/docs/examples/offline-demo/assessment.html -text
+/docs/examples/offline-demo/assessment.json -text
+# CSV's intentional CRLF is a line ending, not stray trailing whitespace.
+/docs/examples/offline-demo/assessment.csv -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol

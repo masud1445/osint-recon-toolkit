@@ -1,4 +1,6 @@
-# Dashboard validation and CI correction
+# Historical dashboard validation and CI correction
+
+This record covers the recovery/CI correction before the professional redesign and final documentation release. Counts, screenshots and print page counts below apply to that revision. See [release readiness](RELEASE_READINESS.md) for current verification.
 
 ## Recovery baseline and original failed run
 
@@ -23,7 +25,7 @@ Additional corrections:
 - Metrics explicitly describe the newest 100 records, matching the history query.
 - A malformed print-media CSS declaration was repaired. A4 output now has a white background and legible dark text, verified by computed styles and inspection of a rendered PDF page.
 - The workflow now polls HTTP readiness for up to 20 seconds and checks that the server process remains alive, instead of assuming a two-second startup.
-- The downloaded standalone report is rendered from its actual bytes in a fresh offline document. This avoids the cloud browser's administrative `file://` restriction without changing report content or disabling browser policy.
+- The downloaded standalone report is rendered from its actual bytes in a fresh offline document. The review browser restricted `file://`; rendering the exact bytes avoided that restriction without changing content or disabling browser policy.
 - README and operator instructions point to the published corrections branch and identify the recovery branch as the preservation baseline.
 
 ## Local verification

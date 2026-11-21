@@ -1,0 +1,136 @@
+{
+  "schema_version": "1.1",
+  "mode": "offline demonstration",
+  "is_synthetic": true,
+  "data_classification": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE",
+  "scenario_id": "internship-workflow-v1",
+  "generated_at": "2026-11-21T10:14:24.926604+00:00",
+  "target": {
+    "value": "internship-lab.example",
+    "kind": "domain",
+    "associated_ip": "192.0.2.10",
+    "is_synthetic": true
+  },
+  "scope": "Fixed fictional domain and documentation IP; no real target, authorization claim or API access.",
+  "summary": {
+    "observed_sources": 0,
+    "synthetic_sources": 3,
+    "total_sources": 3,
+    "interpretation": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE. Three fictional records and two training review items illustrate the workflow. No assessment was conducted and no overall risk score is assigned."
+  },
+  "findings": [
+    {
+      "title": "Synthetic training example: indexed management service",
+      "source": "Shodan",
+      "target": "192.0.2.10",
+      "severity": "training exercise \u2014 informational",
+      "interpretation": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE. The fictional record lists port 22 alongside web ports. This illustrates a review item, not a verified exposure or vulnerability.",
+      "recommendation": "Training task: explain how an authorized analyst would check ownership, business need and record freshness before recommending a change. Do not contact this fixture address.",
+      "is_synthetic": true,
+      "data_classification": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE"
+    },
+    {
+      "title": "Synthetic training example: vendor detection disagreement",
+      "source": "VirusTotal",
+      "target": "internship-lab.example",
+      "severity": "training exercise \u2014 review required",
+      "interpretation": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE. Two fictional malicious classifications illustrate vendor disagreement. No real vendor verdict or compromise is asserted.",
+      "recommendation": "Training task: discuss false positives and source timestamps, then document what independently authorized evidence would be needed to reach a conclusion.",
+      "is_synthetic": true,
+      "data_classification": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE"
+    }
+  ],
+  "evidence": [
+    {
+      "source": "RDAP",
+      "status": "synthetic",
+      "target": "internship-lab.example",
+      "endpoint": "synthetic://internship-workflow-v1/domain-registration",
+      "collected_at": "2025-01-15T10:00:00+00:00",
+      "timestamp_kind": "synthetic fixture timestamp; no collection occurred",
+      "observations": {
+        "objectClassName": "domain",
+        "handle": "SYNTHETIC-DOMAIN-001",
+        "ldhName": "internship-lab.example",
+        "status": [
+          "active"
+        ],
+        "events": [
+          {
+            "eventAction": "registration",
+            "eventDate": "2023-06-01T00:00:00Z"
+          },
+          {
+            "eventAction": "expiration",
+            "eventDate": "2026-06-01T00:00:00Z"
+          }
+        ],
+        "nameservers": [
+          {
+            "ldhName": "ns1.internship-lab.example"
+          },
+          {
+            "ldhName": "ns2.internship-lab.example"
+          }
+        ]
+      },
+      "message": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE. Locally generated fictional RDAP example; source was not contacted.",
+      "verification": "Training fixture only. No source observation, ownership, service exposure or reputation was verified.",
+      "is_synthetic": true,
+      "data_classification": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE"
+    },
+    {
+      "source": "Shodan",
+      "status": "synthetic",
+      "target": "192.0.2.10",
+      "endpoint": "synthetic://internship-workflow-v1/host-metadata",
+      "collected_at": "2025-01-15T10:00:00+00:00",
+      "timestamp_kind": "synthetic fixture timestamp; no collection occurred",
+      "observations": {
+        "ip_str": "192.0.2.10",
+        "hostnames": [
+          "internship-lab.example"
+        ],
+        "org": "Fictional Internship Training Lab",
+        "ports": [
+          22,
+          80,
+          443
+        ],
+        "tags": [
+          "synthetic-training-fixture"
+        ],
+        "last_update": "2025-01-14T18:30:00Z"
+      },
+      "message": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE. Locally generated fictional Shodan example; source was not contacted.",
+      "verification": "Training fixture only. No source observation, ownership, service exposure or reputation was verified.",
+      "is_synthetic": true,
+      "data_classification": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE"
+    },
+    {
+      "source": "VirusTotal",
+      "status": "synthetic",
+      "target": "internship-lab.example",
+      "endpoint": "synthetic://internship-workflow-v1/domain-reputation",
+      "collected_at": "2025-01-15T10:00:00+00:00",
+      "timestamp_kind": "synthetic fixture timestamp; no collection occurred",
+      "observations": {
+        "id": "internship-lab.example",
+        "type": "domain",
+        "last_analysis_stats": {
+          "malicious": 2,
+          "suspicious": 1,
+          "harmless": 65,
+          "undetected": 22,
+          "timeout": 0
+        },
+        "last_analysis_date": 1736877600,
+        "reputation": -3
+      },
+      "message": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE. Locally generated fictional VirusTotal example; source was not contacted.",
+      "verification": "Training fixture only. No source observation, ownership, service exposure or reputation was verified.",
+      "is_synthetic": true,
+      "data_classification": "SYNTHETIC TRAINING DATA \u2014 NOT LIVE INTELLIGENCE"
+    }
+  ]
+}

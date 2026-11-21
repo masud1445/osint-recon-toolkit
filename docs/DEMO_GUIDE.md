@@ -2,6 +2,8 @@
 
 This walkthrough demonstrates the application to an internship supervisor without assessing a real asset. It uses entirely fictional records shaped like RDAP registration metadata, Shodan indexed host metadata and VirusTotal reputation statistics. No provider supplied these records and no actual vendor classification is attributed to a real target.
 
+The [student laboratory handout](teaching/student-laboratory.pdf) condenses the workflow into two A4 pages. The [reviewed fictional sample](examples/offline-demo/README.md) supplies HTML, JSON and CSV exports without requiring installation or accounts.
+
 ## Prepare and run
 
 Install the project as documented in the README while package access is available. After installation, the demo works with networking disconnected and no API keys configured:
@@ -38,9 +40,9 @@ Demo cannot be combined with a target, `--authorized`, `--sources` or `--vt-lice
 
 Fixture/source dates intentionally stay fixed for reproducible classroom explanations. They may precede the actual report generation date by years; this is disclosed in the report and is not evidence of live data staleness. Each invocation builds fresh records, so editing one returned report in Python does not alter subsequent runs. `generated_at` is the actual report creation-preparation time.
 
-## Verification for this enhancement
+## Historical verification of the original Demo enhancement
 
-On Linux/Python 3.12.14, the complete suite passed: **136 tests, 0 failures, 0 skips in 0.96 seconds; 98% statement coverage** (369 statements, 6 uncovered). The 114 existing tests remain passing and 22 demo regression cases were added. The demo module itself has 100% statement coverage.
+These figures describe the earlier CLI-only Demo enhancement, not the current release. Use [release readiness](RELEASE_READINESS.md) for final counts and CI evidence. On Linux/Python 3.12.14, that complete suite passed: **136 tests, 0 failures, 0 skips in 0.96 seconds; 98% statement coverage** (369 statements, 6 uncovered). The 114 existing tests remain passing and 22 demo regression cases were added. The demo module itself has 100% statement coverage.
 
 The tests block sockets, DNS resolution, requests and live collection; a separate-process run also blocks network entry points. They verify no key reads, ignored configured keys, fixed reserved scope, independent fixtures, all-format labels, per-finding provenance, mixed-mode rejection, no live fallback, retained live authorization/licensing gates, escaped HTML, overwrite refusal and export errors. CLI smoke execution generated HTML/JSON/CSV with synthetic records only. Ruff, wheel build and `pip check` passed. Dependency auditing found no known vulnerabilities in audited installed packages (the unpublished local toolkit is skipped by the advisory database). Gitleaks detected no secrets in working files. No new runtime dependencies were added.
 
