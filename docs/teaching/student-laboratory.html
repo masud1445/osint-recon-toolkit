@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+  <title>Project 6.1 — Student OSINT Laboratory</title>
+  <style>
+    :root { color-scheme: light; --navy:#172f4c; --blue:#245bc5; --teal:#007f83; --muted:#50647b; --line:#d5e0ec; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:#edf2f8; color:var(--navy); font:10.5pt/1.36 Arial,Helvetica,sans-serif; }
+    .sheet { width:210mm; height:297mm; margin:8mm auto; padding:13mm 14mm 11mm; background:white; box-shadow:0 3px 24px #172f4c15; display:flex; flex-direction:column; }
+    header { display:flex; align-items:center; justify-content:space-between; padding-bottom:3mm; border-bottom:2px solid var(--teal); font-size:9pt; font-weight:700; letter-spacing:.07em; text-transform:uppercase; }
+    .brand { color:var(--teal); }
+    h1 { font-size:25pt; line-height:1.08; letter-spacing:-.025em; margin:4mm 0 2.5mm; }
+    .lead { color:var(--muted); margin:0 0 4mm; font-size:11pt; }
+    h2 { margin:2mm 0 1.2mm; font-size:13pt; color:var(--blue); }
+    h3 { margin:0 0 1mm; font-size:11pt; }
+    p { margin:0 0 1.5mm; }
+    ul,ol { margin:1mm 0 2mm; padding-left:5mm; }
+    li { padding-left:.4mm; margin:1mm 0; }
+    .notice { border:1px solid #d8b56b; border-left:4px solid #b77d17; background:#fff7e4; padding:2.5mm; margin:0 0 3mm; font-size:10.5pt; }
+    .notice strong { color:#79530c; }
+    pre { white-space:pre-wrap; overflow-wrap:anywhere; background:#f2f6fb; border:1px solid var(--line); border-radius:5px; padding:1.8mm; margin:1.5mm 0; font:9.5pt/1.45 Consolas,"Liberation Mono",monospace; }
+    code { font:9.8pt Consolas,"Liberation Mono",monospace; overflow-wrap:anywhere; }
+    .small { font-size:10pt; color:var(--muted); }
+    .columns { display:grid; grid-template-columns:1fr 1fr; gap:5mm; }
+    .card { background:#f3f8fb; border:1px solid var(--line); padding:2.5mm; border-radius:5px; }
+    table { width:100%; border-collapse:collapse; margin:2mm 0 3mm; font-size:10pt; }
+    th { background:#edf4fb; text-align:left; color:var(--navy); }
+    th,td { padding:1.2mm 2mm; border-bottom:1px solid var(--line); vertical-align:top; }
+    .marks { text-align:right; white-space:nowrap; }
+    .rule { margin-top:3mm; padding-top:3mm; border-top:1px solid var(--line); }
+    a { color:var(--blue); text-decoration:underline; text-underline-offset:2px; }
+    footer { display:flex; justify-content:space-between; gap:4mm; margin-top:auto; padding-top:3mm; font-size:9pt; color:var(--muted); border-top:1px solid var(--line); }
+    @page { size:A4; margin:0; }
+    @media print { body { background:white; } .sheet { margin:0; box-shadow:none; break-after:page; } .sheet:last-child { break-after:auto; } * { print-color-adjust:exact; -webkit-print-color-adjust:exact; } }
+    @media screen and (max-width:820px) { .sheet { width:auto; height:auto; min-height:297mm; margin:0; padding:7vw; } .columns { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <article class="sheet" aria-label="Laboratory page 1 of 2">
+    <header><span class="brand">OSINT Recon Toolkit</span><span>Project 6.1 · Student laboratory</span></header>
+    <h1>Passive OSINT<br>evidence review</h1>
+    <p class="lead">A supervised offline exercise in footprinting, source interpretation and responsible reporting.</p>
+    <div class="notice"><strong>Synthetic training data — not live intelligence.</strong> No domain ownership, API keys or provider access is required. Do not contact the fictional identifiers.</div>
+
+    <h2>1 · Learning objectives</h2>
+    <ul>
+      <li>Trace a report to its source, mode, target and timestamps.</li>
+      <li>Separate a source statement from an analyst interpretation and an unverified claim.</li>
+      <li>Produce consistent HTML, JSON and CSV evidence with proportionate recommendations.</li>
+    </ul>
+
+    <h2>2 · Required software and setup</h2>
+    <p>Use <strong>Python 3.10+</strong>, Git and a local browser on macOS, Windows or Linux. Installation may need Internet access; the installed Demo workflow runs offline. Use a new checkout directory.</p>
+    <pre>git clone https://github.com/masud1445/osint-recon-toolkit.git
+cd osint-recon-toolkit
+git switch feature/academic-release-readiness</pre>
+    <div class="columns">
+      <div><h3>macOS / Linux terminal</h3><pre>python3 -m venv .venv
+source .venv/bin/activate</pre></div>
+      <div><h3>Windows PowerShell</h3><pre>py -3 -m venv .venv
+.venv\Scripts\Activate.ps1</pre></div>
+    </div>
+    <pre>python -m pip install --upgrade pip
+python -m pip install -e '.[test]'
+osint-dashboard</pre>
+    <p class="small">If activation is restricted, use <code>.venv\Scripts\python.exe</code> for installation and <code>.venv\Scripts\osint-dashboard.exe</code> to start. Keep one server per data directory.</p>
+
+    <h2>3 · Run the offline workflow</h2>
+    <ol>
+      <li>Open <code>http://127.0.0.1:8765</code>; keep the server Terminal open.</li>
+      <li>Select <strong>New Reconnaissance Assessment → Demo</strong>. Submit without a target, sources, authorization or license fields.</li>
+      <li>Review Collection Status, Evidence Review, findings and source JSON. Export HTML, JSON and CSV; retain all synthetic labels.</li>
+    </ol>
+    <p>CLI alternative: <code>osint-recon --demo --output reports/student-lab-001</code></p>
+    <p class="small">Use a fresh output directory each time. Open its <code>assessment.html</code> locally. Stop the dashboard with Control-C. Select Live only in a separate, genuinely authorized exercise.</p>
+    <footer><span>Offline laboratory · Setup and execution</span><span>1 / 2</span></footer>
+  </article>
+
+  <article class="sheet" aria-label="Laboratory page 2 of 2">
+    <header><span class="brand">OSINT Recon Toolkit</span><span>Evidence → interpretation → review</span></header>
+    <h1>Interpret and explain</h1>
+    <p class="lead">All facts below describe built-in fictional fixtures, never real provider observations.</p>
+
+    <h2>4 · Read the three source examples</h2>
+    <table>
+      <thead><tr><th>Source / synthetic evidence</th><th>Correct interpretation</th></tr></thead>
+      <tbody>
+        <tr><td><strong>RDAP</strong><br><code>internship-lab.example</code>; active; registration 2023-06-01; expiry 2026-06-01; two example nameservers.</td><td>Registration context, not proof of ownership or current state. Structured HTTPS RDAP is implemented; legacy port-43 WHOIS is <strong>not implemented</strong>.</td></tr>
+        <tr><td><strong>Shodan-shaped host record</strong><br>Documentation IP <code>192.0.2.10</code>; indexed ports <strong>22, 80, 443</strong>.</td><td>Indexed metadata, not a scan. Even a genuine indexed port would not prove current reachability or a vulnerability.</td></tr>
+        <tr><td><strong>VirusTotal-shaped record</strong><br><strong>2</strong> malicious, <strong>1</strong> suspicious, <strong>65</strong> harmless, <strong>22</strong> undetected, <strong>0</strong> timeout.</td><td>90 fictional classifications illustrate disagreement, not compromise. Review age, context and false positives.</td></tr>
+      </tbody>
+    </table>
+    <p class="small">Expected: <strong>3 synthetic records, 0 live observations, 2 training review items</strong>. Fixture <code>collected_at</code>: <code>2025-01-15T10:00:00+00:00</code>; <code>generated_at</code>: actual preparation time. Provider-shaped dates are separate fictional dates.</p>
+
+    <h2>5 · Practical student activities</h2>
+    <ol>
+      <li><strong>Provenance:</strong> locate <code>mode: offline demonstration</code>, <code>is_synthetic: true</code> and each source’s <code>status: synthetic</code>. Explain why no live approval record is claimed.</li>
+      <li><strong>Interpretation:</strong> write a source statement, cautious interpretation and separately authorized verification question for each source. Do not query fixture assets.</li>
+      <li><strong>Reconciliation:</strong> compare target, mode, source states and findings across exports. CSV observations/findings contain JSON. Review HTML A4 print preview.</li>
+      <li><strong>Coverage:</strong> explain why unavailable/error data cannot justify safety or a Demo fallback. Optional: run <code>python -m pytest</code> to inspect mocked failures.</li>
+    </ol>
+
+    <h2>6 · Submission and expected outcomes</h2>
+    <p>Submit three labelled synthetic exports and a worksheet of source fields, dates, interpretation limits and next steps. Explain provenance, vendor disagreement, scope and coverage gaps. No live access or client approval is implied.</p>
+
+    <h2>Suggested grading rubric · 20 marks</h2>
+    <table>
+      <thead><tr><th>Criterion</th><th class="marks">Marks</th></tr></thead>
+      <tbody>
+        <tr><td>Correct scope, synthetic provenance and timestamp distinctions</td><td class="marks">5</td></tr>
+        <tr><td>Accurate source extraction and conservative interpretation</td><td class="marks">6</td></tr>
+        <tr><td>Consistent, labelled HTML/JSON/CSV evidence package</td><td class="marks">4</td></tr>
+        <tr><td>Coverage gaps, ethical boundaries and actionable review guidance</td><td class="marks">5</td></tr>
+      </tbody>
+    </table>
+    <p class="small">Suggested rubric; supervisor approval required. Expanded exercises: <a href="https://github.com/masud1445/osint-recon-toolkit/blob/feature/academic-release-readiness/docs/OSINT_OPERATIONS_WORKBOOK.md">Operations workbook §10</a>.</p>
+    <footer><span>All examples synthetic · Live API acceptance remains unverified</span><span>2 / 2</span></footer>
+  </article>
+</body>
+</html>

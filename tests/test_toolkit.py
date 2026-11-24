@@ -170,7 +170,7 @@ def test_rdap_registry_redirect():
             302,
             headers={"Location": "https://rdap.verisign.com/com/v1/domain/example.com"},
         ),
-        response(data={"objectClassName": "domain"}),
+        response(data={"objectClassName": "domain", "ldhName": "example.com"}),
     )
     assert RDAP(t).collect(validate_target("example.com")).status == "observed"
     assert session.get.call_count == 2
@@ -211,7 +211,14 @@ def test_missing_key_no_request(connector):
 
 @pytest.mark.parametrize(
     "connector,data",
-    [(RDAP, {}), (Shodan, {}), (VirusTotal, {"data": {"attributes": []}})],
+    [
+        (RDAP, {}),
+        (Shodan, {}),
+        (
+            VirusTotal,
+            {"data": {"id": "example.com", "type": "domain", "attributes": []}},
+        ),
+    ],
 )
 def test_malformed_schema(connector, data):
     t, _, _ = transport(response(data=data))
@@ -237,10 +244,12 @@ def test_connector_contracts_and_assessment_integration(tmp_path):
         response(
             data={
                 "data": {
+                    "id": "8.8.8.8",
+                    "type": "ip_address",
                     "attributes": {
                         "last_analysis_stats": {"malicious": 2},
                         "last_analysis_date": 1700000000,
-                    }
+                    },
                 }
             }
         ),
@@ -485,7 +494,15 @@ def test_invalid_port_observations(ports):
 )
 def test_invalid_vendor_counts(stats):
     t, _, _ = transport(
-        response(data={"data": {"attributes": {"last_analysis_stats": stats}}})
+        response(
+            data={
+                "data": {
+                    "id": "example.com",
+                    "type": "domain",
+                    "attributes": {"last_analysis_stats": stats},
+                }
+            }
+        )
     )
     result = VirusTotal(t, "SECRET").collect(validate_target("example.com"))
     assert result.status == "error"

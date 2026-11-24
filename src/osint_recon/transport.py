@@ -5,9 +5,13 @@ import math
 import time
 from datetime import datetime, timezone
 from email.utils import parsedate_to_datetime
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 
 import requests
+
+
+def reject_nonfinite(value):
+    raise ValueError("Non-finite JSON number")
 
 
 class SourceError(Exception):
@@ -39,11 +43,17 @@ class Transport:
         self.last = {}
 
     def get(self, url, *, params=None, headers=None, interval=0, redirects=0):
-        parsed = urlsplit(url)
+        if not isinstance(url, str):
+            raise SourceError("error", "Invalid intelligence source URL.")
+        try:
+            parsed = urlsplit(url)
+            port = parsed.port
+        except (TypeError, ValueError):
+            raise SourceError("error", "Invalid intelligence source URL.") from None
         if (
             parsed.scheme != "https"
             or parsed.hostname not in self.HOSTS
-            or parsed.port not in (None, 443)
+            or port not in (None, 443)
             or parsed.username
             or parsed.password
         ):
@@ -108,9 +118,16 @@ class Transport:
                         )
                     if 300 <= code < 400:
                         location = response.headers.get("Location", "")
-                        destination = urlsplit(location)
+                        try:
+                            destination = urlsplit(urljoin(url, location))
+                            destination_port = destination.port
+                        except (TypeError, ValueError):
+                            raise SourceError(
+                                "unavailable", "Source returned an invalid redirect."
+                            ) from None
                         if (
-                            parsed.hostname in self.RDAP_HOSTS
+                            location
+                            and parsed.hostname in self.RDAP_HOSTS
                             and not params
                             and not (headers or {}).get("x-apikey")
                         ) and (
@@ -118,11 +135,11 @@ class Transport:
                             and destination.hostname in self.RDAP_HOSTS
                             and not destination.username
                             and not destination.password
-                            and destination.port in (None, 443)
+                            and destination_port in (None, 443)
                             and redirects < 3
                         ):
                             return self.get(
-                                location,
+                                destination.geturl(),
                                 headers={"Accept": "application/rdap+json"},
                                 redirects=redirects + 1,
                             )
@@ -140,7 +157,7 @@ class Transport:
                                 "error", "Source response exceeds size limit."
                             )
                     try:
-                        data = json.loads(body)
+                        data = json.loads(body, parse_constant=reject_nonfinite)
                     except (ValueError, UnicodeError, RecursionError):
                         raise SourceError(
                             "error", "Source returned invalid JSON."
@@ -154,7 +171,19 @@ class Transport:
                             raise SourceError(
                                 "error", "Source JSON exceeds nesting limit."
                             )
+                        if isinstance(node, float) and not math.isfinite(node):
+                            raise SourceError(
+                                "error", "Source contains a non-finite number."
+                            )
+                        if isinstance(node, str):
+                            try:
+                                node.encode("utf-8")
+                            except UnicodeError:
+                                raise SourceError(
+                                    "error", "Source contains invalid Unicode."
+                                ) from None
                         if isinstance(node, dict):
+                            pending.extend((key, depth + 1) for key in node)
                             pending.extend(
                                 (value, depth + 1) for value in node.values()
                             )

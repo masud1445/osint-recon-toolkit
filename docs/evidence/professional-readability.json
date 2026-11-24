@@ -1,0 +1,384 @@
+{
+  "viewports": [
+    {
+      "theme": "light",
+      "width": 1440,
+      "page": "dashboard"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "page": "form"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "page": "live-form"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "page": "results"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "page": "findings"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "page": "history"
+    },
+    {
+      "theme": "light",
+      "width": 1440,
+      "page": "sources"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "page": "dashboard"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "page": "form"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "page": "live-form"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "page": "results"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "page": "findings"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "page": "history"
+    },
+    {
+      "theme": "light",
+      "width": 1920,
+      "page": "sources"
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "page": "dashboard"
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "page": "form"
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "page": "live-form"
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "page": "results"
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "page": "findings"
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "page": "history"
+    },
+    {
+      "theme": "light",
+      "width": 768,
+      "page": "sources"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "page": "dashboard"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "page": "form"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "page": "live-form"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "page": "results"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "page": "findings"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "page": "history"
+    },
+    {
+      "theme": "light",
+      "width": 390,
+      "page": "sources"
+    },
+    {
+      "theme": "light",
+      "width": 360,
+      "page": "dashboard"
+    },
+    {
+      "theme": "light",
+      "width": 360,
+      "page": "form"
+    },
+    {
+      "theme": "light",
+      "width": 360,
+      "page": "live-form"
+    },
+    {
+      "theme": "light",
+      "width": 360,
+      "page": "results"
+    },
+    {
+      "theme": "light",
+      "width": 360,
+      "page": "findings"
+    },
+    {
+      "theme": "light",
+      "width": 360,
+      "page": "history"
+    },
+    {
+      "theme": "light",
+      "width": 360,
+      "page": "sources"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "page": "dashboard"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "page": "form"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "page": "live-form"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "page": "results"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "page": "findings"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "page": "history"
+    },
+    {
+      "theme": "dark",
+      "width": 1440,
+      "page": "sources"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "page": "dashboard"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "page": "form"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "page": "live-form"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "page": "results"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "page": "findings"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "page": "history"
+    },
+    {
+      "theme": "dark",
+      "width": 1920,
+      "page": "sources"
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "page": "dashboard"
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "page": "form"
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "page": "live-form"
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "page": "results"
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "page": "findings"
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "page": "history"
+    },
+    {
+      "theme": "dark",
+      "width": 768,
+      "page": "sources"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "page": "dashboard"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "page": "form"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "page": "live-form"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "page": "results"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "page": "findings"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "page": "history"
+    },
+    {
+      "theme": "dark",
+      "width": 390,
+      "page": "sources"
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "page": "dashboard"
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "page": "form"
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "page": "live-form"
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "page": "results"
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "page": "findings"
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "page": "history"
+    },
+    {
+      "theme": "dark",
+      "width": 360,
+      "page": "sources"
+    }
+  ],
+  "native_zoom": [
+    {
+      "zoom": 1.25,
+      "theme": "light",
+      "width": 1152,
+      "outer": 1440,
+      "dpr": 1.25
+    },
+    {
+      "zoom": 1.25,
+      "theme": "dark",
+      "width": 1152,
+      "outer": 1440,
+      "dpr": 1.25
+    },
+    {
+      "zoom": 2.0,
+      "theme": "light",
+      "width": 720,
+      "outer": 1440,
+      "dpr": 2
+    },
+    {
+      "zoom": 2.0,
+      "theme": "dark",
+      "width": 720,
+      "outer": 1440,
+      "dpr": 2
+    }
+  ]
+}

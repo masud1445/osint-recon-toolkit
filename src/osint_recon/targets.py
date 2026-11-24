@@ -17,6 +17,8 @@ def validate_target(value: str) -> Target:
         or not value
         or value != value.strip()
         or len(value) > 253
+        or "%" in value
+        or any(ord(char) < 32 or ord(char) == 127 for char in value)
     ):
         raise ValueError(
             "Provide one domain or public IP, without whitespace or URL syntax."

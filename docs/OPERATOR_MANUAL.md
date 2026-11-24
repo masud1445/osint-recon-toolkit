@@ -1,6 +1,38 @@
 # Operator manual
 
-## Before collection
+## Local dashboard
+
+Use the documentation release branch `feature/academic-release-readiness`; `recovery/local-intelligence-dashboard` preserves the original recovered checkpoint. Inspect and preserve any local changes before switching branches. Start the installed application with `osint-dashboard`, then use your local browser at `http://127.0.0.1:8765`. The [README](../README.md#install-on-macos-linux-or-windows) provides explicit macOS, Windows and Linux installation commands; the full [dashboard guide](DASHBOARD.md) includes exact Mac Terminal startup commands. The server binds only to IPv4 loopback through Waitress; it has no public host option and does not enable Flask debug mode. Stop it with Control-C in its Terminal.
+
+Assessment Dashboard, New Reconnaissance Assessment, Collection Status, Evidence Review, Findings & Recommendations, Intelligence Sources and Assessment History share the existing collection/reporting engine. Demo and Live remain separate submission paths. Mode/source filters and source-evidence disclosures help review records; theme controls are saved locally by the browser. Dashboard creation and deletion require CSRF tokens from the current session; after restarting the server, reload old forms before submitting. The `same-origin` referrer policy allows legitimate local browser forms to supply their origin without sending referrers to other origins. Null/foreign origins and missing or incorrect CSRF tokens remain rejected.
+
+For a demo assessment, select Demo and submit without target, sources, authorization or license fields. The fictional collector makes no provider requests. For a live assessment, enter the exact approved target, choose sources, record a nonempty authorization reference, confirm scope authorization and select a permitted VirusTotal license when applicable. References are metadata, not proof of legal authorization. Do not paste secret values into authorization references or any form field.
+
+A new live assessment is required to refresh intelligence. Earlier reports remain historical snapshots; the page does not silently recollect provider data. The single worker displays queue/source progress and honors the existing provider pacing. Up to five assessments may be queued/running. Closing a browser tab does not stop an active collection. Interrupted queued/running records become error records after server restart and are never automatically resumed.
+
+History persists in `~/.osint-recon/assessments.sqlite3`; `--data-dir PATH` selects another trusted location. The interface lists the newest 100 assessments; older records are not automatically deleted. Use the CSRF-protected delete action on finished/error records according to engagement retention policy. Active jobs cannot be deleted. Failed live jobs retain their authorization metadata until deleted. Deletion is logical SQLite record removal, not certified secure erasure; downloaded exports and backups require separate handling. Run only one dashboard process against a data directory.
+
+API keys stay in the server process environment. The interface shows configured/not-configured presence only and provides no API-key entry or reveal control. Restart the server after changing its environment. No `.env` file is loaded automatically. A missing credential or entitlement is an explicit source coverage gap, not a successful negative result.
+
+The default bright interface and optional dark theme have the same controls and evidence semantics. Use the [operations workbook](OSINT_OPERATIONS_WORKBOOK.md), [scope form](SCOPE_AUTHORIZATION_FORM.md) and [mini-audit checklist](MINI_AUDIT_CHECKLIST.md) for a standardized engagement. See [supervisor compliance](SUPERVISOR_COMPLIANCE.md) for implemented versus unverified requirements.
+
+## Offline demonstration without a domain or API keys
+
+After installation, run:
+
+```sh
+osint-recon --demo --output reports/supervisor-demo
+```
+
+Open `assessment.html` in that directory; `assessment.json` and `assessment.csv` contain the same synthetic evidence and findings. Demo exits 0 after successful export or 2 on invalid arguments/export failure. It never reads API credentials, constructs the HTTP transport, calls connectors, resolves DNS or contacts any target/provider. Existing API keys do not enable live activity in demo mode. Installing the application/dependencies may require network access; **running the installed demo does not**.
+
+The fixed fictional scope is `internship-lab.example` plus documentation IP `192.0.2.10`. Both are deliberately rejected by live target validation. Do not supply a target or combine demo with `--authorized`, `--sources` or `--vt-license`; mixed invocations fail before collection. Demo does not accept arbitrary user targets or source selection. Only `--demo` enters this path; missing API credentials and live failures never select it.
+
+A concise visible demo indicator, per-record classification attributes/badges, JSON provenance fields and every CSV row identify synthetic training data. Demo uses JSON schema 1.1 with `mode: offline demonstration`, `is_synthetic: true`, `status: synthetic`, `data_classification` and `scenario_id`. `observed_sources` is always 0; `synthetic_sources` is 3. Each finding has its own synthetic flag and label. No real provider verdict, service exposure or compromise is implied.
+
+`generated_at` is the real report-preparation timestamp. Demo `collected_at`, RDAP events and source analysis/update dates are fixed **fictional fixture timestamps**, not a live collection or an age-based risk conclusion. See [the presentation guide](DEMO_GUIDE.md) for the complete workflow, the [two-page lab](teaching/student-laboratory.pdf) for classroom use, and the [reviewed synthetic exports](examples/offline-demo/README.md) for a ready-to-open example.
+
+## Before live collection
 
 Use Python 3.10 or later and follow the README virtual environment instructions. Obtain written target/source authorization before setting `--authorized`. Inspect `osint-recon --help`. Input accepts one public IPv4/IPv6 address or DNS domain (Unicode labels canonicalize through IDNA). URLs, paths, ports, IP ranges, wildcards, local/private IPs and reserved suffixes are rejected. A syntactically valid domain is not proof of registration or scope approval.
 
@@ -19,10 +51,10 @@ Generated files:
 | File | Use |
 | --- | --- |
 | `assessment.html` | Self-contained human review, source status, conservative interpretation and recommendations |
-| `assessment.json` | Structured assessment/evidence contract version 1.0 |
-| `assessment.csv` | One row per selected source, observations serialized as JSON |
+| `assessment.json` | Structured assessment/evidence: live schema 1.0, offline demo schema 1.1 |
+| `assessment.csv` | One row per source; observations and source-linked findings serialized as JSON, with explicit mode/classification and record target |
 
-Reports are labeled `live-source retrieval` to describe the execution path; check the observed source count to determine whether any live records were actually obtained. Zero successful sources means zero evidence-supported findings. Fixtures in automated tests are synthetic and never distributed as operational reports.
+Live reports are labeled `live-source retrieval` to describe the execution path; check the observed source count to determine whether any live records were actually obtained. Zero successful sources means zero evidence-supported findings. Offline demo reports instead use `offline demonstration` and explicit synthetic labels; they must never be presented as operational evidence.
 
 ## Troubleshooting
 
@@ -35,14 +67,16 @@ Reports are labeled `live-source retrieval` to describe the execution path; chec
 | Connection failure | Check provider availability, approved egress destinations and trusted proxy CA configuration; never disable TLS verification |
 | Redirect requires review | Ask a maintainer to review the registry domain; never bypass the destination allowlist |
 | Invalid JSON/schema | Preserve sanitized status and consult provider documentation; do not fabricate replacement data |
+| Stale form or local-origin/token rejection | Reload from the loopback URL after restart; do not disable CSRF/origin checks |
+| Local queue full | Wait for existing jobs to finish; do not launch duplicate processes |
 | Export failure | Use a new writable output directory with trusted parents; existing files are intentionally protected |
 
-Cloud networking must permit only the sources used: `rdap.org` and applicable approved registry hosts; `api.shodan.io`; `www.virustotal.com`. Documentation access additionally needs `developer.shodan.io`, `docs.virustotal.com`, and relevant RDAP documentation hosts. The current cloud policy blocks the intelligence/documentation hosts; mocked tests require no changes. Never insert real keys into repository network settings or saved shell scripts.
+For live collection, network policy must permit only the sources used: `rdap.org` and applicable approved registry hosts; `api.shodan.io`; `www.virustotal.com`. Documentation access additionally needs `developer.shodan.io`, `docs.virustotal.com`, and relevant RDAP documentation hosts. Live integrations remain unverified; offline/mocked tests require no source access. Configure keys only in the approved server process environment or secret manager, never in repository files or saved shell scripts.
 
 ## Acceptance and maintenance
 
-Run `python -m pytest --cov=osint_recon --cov-report=term-missing` after changes. Dependency checks: install `pip-audit`, then `python -m pip_audit`; use `--cache-dir /tmp/osint-audit-cache` on this cloud machine. Review CI results independently after pushing. A locally passing Linux suite is not evidence that remote Windows/macOS runs passed.
+Run `python -m pytest --cov=osint_recon --cov-report=term-missing` after changes. Dependency checks: install `pip-audit`, then `python -m pip_audit`. If the default cache is unwritable, set `--cache-dir` to a private writable directory on your own computer. Review CI results independently after pushing. A locally passing Linux suite is not evidence that remote Windows/macOS runs passed.
 
 For a genuine authorized acceptance test, independently confirm the current official API contracts and licensing; configure source access and keys; select an explicitly approved target; run each connector; compare the selected fields and timestamps to provider records; inspect unavailable/error behavior; record sanitized outcomes privately. Do not place target reports or keys in Git. No live acceptance test was performed during implementation.
 
-Use existing isolated checkouts in cloud tasks; do not create worktrees unless explicitly requested. No service processes need restarting. Reinstall with `python -m pip install -e ".[test]"` when dependencies or the checkout location change.
+The standalone CLI needs no service process. Restart the dashboard after code, environment or dependency changes, then reload its pages. Reinstall with `python -m pip install -e ".[test]"` when dependencies or the checkout location change.
